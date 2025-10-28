@@ -1,36 +1,3 @@
-<?php
-require_once __DIR__ . "/../../../config/koneksiDB.php";
-require_once __DIR__ . "/../../../classes/role.php";
-
-$db = new DBConnection();
-$roleObj = new Role($db);
-
-$userRoles = $roleObj->getAllUserWithRoles();
-$roleOptions = $roleObj->getRoleOptions()['data'] ?? [];
-
-if (isset($_POST['save'])) {
-    $iduser = (int)$_POST['iduser'];
-    $idrole = (int)$_POST['idrole'];
-    $status = (int)$_POST['status'];
-    $roleObj->addRoleToUser($iduser, $idrole, $status);
-
-    // 🟩 Tambahan sinkronisasi role ke tabel user (biar tampil juga di Data User)
-    $conn = $db->getConnection();
-    $stmt = $conn->prepare("SELECT nama_role FROM role WHERE idrole = ?");
-    $stmt->bind_param("i", $idrole);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-        $namaRole = $row['nama_role'];
-        $update = $conn->prepare("UPDATE user SET role = ? WHERE iduser = ?");
-        $update->bind_param("si", $namaRole, $iduser);
-        $update->execute();
-    }
-
-    header("Location: manajemenrole.php");
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -46,7 +13,6 @@ if (isset($_POST['save'])) {
         color: #333;
     }
 
-    /* Navbar */
     .navbar {
         background: #102f76;
         padding: 15px 25px;
@@ -131,7 +97,6 @@ if (isset($_POST['save'])) {
     th:nth-child(3), td:nth-child(3) { width: 16%; }
     th:nth-child(4), td:nth-child(4) { width: 20%; }
     th:nth-child(5), td:nth-child(5) { width: 35%; }
-    /* 🟦 kolom aksi dikecilin biar pas */
     th:nth-child(6), td:nth-child(6) { width: 18%; }
 
     .btn-simpan {
@@ -171,7 +136,6 @@ if (isset($_POST['save'])) {
         text-align: center;
     }
 
-    /* 💙 Gradasi biru dari palet project */
     .badge-role {
         background: linear-gradient(to right, #004AAD, #00B4D8);
         color: white;
@@ -222,7 +186,7 @@ if (isset($_POST['save'])) {
 
   <div class="container mt-5">
     <div class="mb-4">
-      <a href="../datamaster.php" class="btn btn-kembali">
+      <a href="../datamaster" class="btn btn-kembali">
         ← Kembali
       </a>
     </div>
@@ -242,13 +206,19 @@ if (isset($_POST['save'])) {
           </tr>
         </thead>
         <tbody>
-          <?php $no = 1; foreach ($userRoles['data'] as $row): ?>
+          <?php
+            $userRoles = $userRoles ?? ['data' => []];
+            $roleOptions = $roleOptions ?? [];
+            $no = 1;
+            foreach ($userRoles['data'] as $row):
+          ?>
           <tr>
-            <form method="POST">
+            <form method="POST" action="{{ route('admin.role.store') }}">
+            {!! csrf_field() !!}
               <td class="no-col"><?= $no++ ?></td>
-              <td><?= $row['iduser'] ?></td>
-              <td><?= htmlspecialchars($row['nama']) ?></td>
-              <td><?= htmlspecialchars($row['email']) ?></td>
+              <td><?= $row['iduser'] ?? '' ?></td>
+              <td><?= htmlspecialchars($row['nama'] ?? '') ?></td>
+              <td><?= htmlspecialchars($row['email'] ?? '') ?></td>
 
               <td>
                 <div class="role-wrapper mb-2">
@@ -266,21 +236,21 @@ if (isset($_POST['save'])) {
                   <select name="idrole" class="form-select w-auto">
                     <option value="">Pilih Role</option>
                     <?php foreach ($roleOptions as $r): ?>
-                      <option value="<?= $r['idrole'] ?>"><?= $r['nama_role'] ?></option>
+                      <option value="<?= $r['idrole'] ?? '' ?>"><?= $r['nama_role'] ?? '' ?></option>
                     <?php endforeach; ?>
                   </select>
                   <select name="status" class="form-select w-auto">
                     <option value="1">Aktif</option>
                     <option value="0">Nonaktif</option>
                   </select>
-                  <input type="hidden" name="iduser" value="<?= $row['iduser'] ?>">
+                  <input type="hidden" name="iduser" value="<?= $row['iduser'] ?? '' ?>">
                   <button type="submit" name="save" class="btn btn-simpan btn-sm"><i class="bi bi-check2-circle"></i> Simpan</button>
                 </div>
               </td>
 
               <td>
                 <div class="aksi-wrapper">
-                  <a href="hapusrole.php?id=<?= $row['iduser'] ?>" class="btn btn-hapus btn-sm" onclick="return confirm('Yakin hapus semua role user ini?')">
+                  <a href="{{ route('admin.role.delete', $row['iduser'] ?? '') }}" class="btn btn-hapus btn-sm" onclick="return confirm('Yakin hapus semua role user ini?')">
                     <i class="bi bi-trash"></i> Hapus
                   </a>
                 </div>

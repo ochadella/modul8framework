@@ -1,59 +1,14 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+// ✅ Hindari error saat variabel belum didefinisikan
+$editData = $editData ?? [];
+$rows = $rows ?? [];
+
+// ✅ Jika data dari DB berbentuk objek (stdClass), ubah ke array biar bisa dipanggil seperti $r['nama']
+if (!empty($rows) && is_object($rows[0] ?? null)) {
+    $rows = json_decode(json_encode($rows), true);
 }
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: ../../../auth/login.php"); // ✅ perbaiki path login sesuai struktur
-    exit;
-}
-
-// ✅ perbaikan path sesuai posisi file di views/resepsionis/pemilik/
-require_once __DIR__ . "/../../../config/koneksiDB.php";
-require_once __DIR__ . "/../../../classes/Pemilik.php";
-
-$db = new DBConnection();
-$pemilik = new Pemilik($db);
-
-// Tambah
-if (isset($_POST['tambah'])) {
-    $nama = $_POST['nama_pemilik'];
-    $telp = $_POST['no_telp'];
-    $alamat = $_POST['alamat'];
-    $pemilik->create($nama, $telp, $alamat);
-    header("Location: Datapemilik.php");
-    exit;
-}
-
-// Update
-if (isset($_POST['update'])) {
-    $id = $_POST['idpemilik'];
-    $nama = $_POST['nama_pemilik'];
-    $telp = $_POST['no_telp'];
-    $alamat = $_POST['alamat'];
-    $pemilik->update($id, $nama, $telp, $alamat);
-    header("Location: Datapemilik.php");
-    exit;
-}
-
-// Hapus + Reset ID biar mulai dari 1 lagi
-if (isset($_GET['delete'])) {
-    $pemilik->delete($_GET['delete']);
-
-    // 🔹 Reset urutan ID biar rapi (mulai lagi dari 1)
-    $conn = $db->getConnection();
-    $conn->query("SET @num := 0");
-    $conn->query("UPDATE pemilik SET idpemilik = @num := (@num+1)");
-    $conn->query("ALTER TABLE pemilik AUTO_INCREMENT = 1");
-
-    header("Location: Datapemilik.php");
-    exit;
-}
-
-// Data
-$rows = $pemilik->getAll()['data'] ?? [];
-$editData = null;
-if (isset($_GET['edit'])) {
-    $editData = $pemilik->getById($_GET['edit']);
+if (is_object($editData)) {
+    $editData = json_decode(json_encode($editData), true);
 }
 ?>
 <!DOCTYPE html>
@@ -87,10 +42,10 @@ if (isset($_GET['edit'])) {
 <body>
   <div class="navbar">
       <span>👤 Registrasi Pemilik</span>
-      <!-- ✅ ubah path navigasi biar balik ke dashboard resepsionis -->
+      <!-- ✅ path tetap sama -->
       <span>
         <a href="../../../interface/dashboard.php">Dashboard</a>
-        <a href="../../../auth/logout.php">Logout</a>
+        <a href="../../../auth/login">Logout</a>
       </span>
   </div>
   <div class="content">
@@ -101,24 +56,24 @@ if (isset($_GET['edit'])) {
               <label>Nama:</label><input type="text" name="nama_pemilik" value="<?= $editData['nama'] ?? '' ?>" required>
               <label>No Telp:</label><input type="text" name="no_telp" value="<?= $editData['no_wa'] ?? '' ?>" required>
               <label>Alamat:</label><input type="text" name="alamat" value="<?= $editData['alamat'] ?? '' ?>" required>
-              <?php if ($editData): ?>
+              <?php if (!empty($editData)): ?>
                 <button type="submit" name="update" class="btn btn-edit">Update</button>
-                <a href="Datapemilik.php" class="btn btn-delete">Batal</a>
+                <a href="Datapemilik" class="btn btn-delete">Batal</a>
               <?php else: ?>
                 <button type="submit" name="tambah" class="btn btn-add">Tambah</button>
-                <a href="../../../views/admin/datamaster.php" class="btn btn-back">← Kembali</a>
+                <a href="{{ route('admin.datamaster') }}" class="btn btn-back">← Kembali</a>
               <?php endif; ?>
           </form>
       </div>
       <div class="table-container">
           <table>
               <tr><th>ID</th><th>Nama</th><th>No Telp</th><th>Alamat</th><th>Aksi</th></tr>
-              <?php if ($rows): foreach($rows as $r): ?>
+              <?php if (!empty($rows)): foreach($rows as $r): ?>
               <tr>
-                  <td><?= $r['idpemilik'] ?></td>
-                  <td><?= $r['nama'] ?></td>
-                  <td><?= $r['no_wa'] ?></td>
-                  <td><?= $r['alamat'] ?></td>
+                  <td><?= htmlspecialchars($r['idpemilik'] ?? '') ?></td>
+                  <td><?= htmlspecialchars($r['nama'] ?? '') ?></td>
+                  <td><?= htmlspecialchars($r['no_wa'] ?? '') ?></td>
+                  <td><?= htmlspecialchars($r['alamat'] ?? '') ?></td>
                   <td class="actions">
                       <a href="Datapemilik.php?edit=<?= $r['idpemilik'] ?>" class="btn btn-edit">✏ Edit</a>
                       <a href="Datapemilik.php?delete=<?= $r['idpemilik'] ?>" class="btn btn-delete" onclick="return confirm('Hapus data ini?')">🗑 Hapus</a>

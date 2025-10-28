@@ -1,85 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-
-require_once __DIR__ . "/../../../config/koneksiDB.php";
-require_once __DIR__ . "/../../../classes/Pet.php";
-require_once __DIR__ . "/../../../classes/Pemilik.php";
-require_once __DIR__ . "/../../../classes/RasHewan.php";
-
-$db = new DBConnection();
-$pet = new Pet($db);
-$pemilik = new Pemilik($db);
-$ras = new RasHewan($db);
-
-// 🔹 Tambah Data
-if (isset($_POST['tambah'])) {
-    $nama = $_POST['nama'];
-    $tanggal_lahir = $_POST['tanggal_lahir'];
-    $warna_bulu = $_POST['warna_bulu'];
-    $jenis_kelamin = $_POST['jenis_kelamin'];
-    $idpemilik = $_POST['idpemilik'];
-    $idras = $_POST['idras_hewan'];
-
-    $pet->create($nama, $tanggal_lahir, $warna_bulu, $jenis_kelamin, $idpemilik, $idras);
-
-    $conn = $db->getConnection();
-    $idpetBaru = $conn->insert_id;
-
-    $stmt = $conn->prepare("INSERT INTO reservasi (idhewan, tanggal_kunjungan, status) VALUES (?, CURDATE(), 'Menunggu')");
-    $stmt->bind_param("i", $idpetBaru);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: Datapet.php");
-    exit;
-}
-
-// 🔹 Update Data
-if (isset($_POST['update'])) {
-    $id = $_POST['idpet'];
-    $nama = $_POST['nama'];
-    $tanggal_lahir = $_POST['tanggal_lahir'];
-    $warna_bulu = $_POST['warna_bulu'];
-    $jenis_kelamin = $_POST['jenis_kelamin'];
-    $idpemilik = $_POST['idpemilik'];
-    $idras = $_POST['idras_hewan'];
-
-    $pet->update($id, $nama, $tanggal_lahir, $warna_bulu, $jenis_kelamin, $idpemilik, $idras);
-    header("Location: Datapet.php");
-    exit;
-}
-
-// 🔹 Hapus Data
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $conn = $db->getConnection();
-
-    // Hapus data terkait di temu_dokter dulu
-    $conn->query("DELETE FROM temu_dokter WHERE idpet = $id");
-
-    // Baru hapus dari tabel pet
-    $pet->delete($id);
-
-    // ❌ Jangan reset ID — biarkan auto_increment
-    header("Location: Datapet.php");
-    exit;
-}
-
-// 🔹 Ambil Data
-$rows = $pet->getAll()['data'] ?? [];
-$listPemilik = $pemilik->getAll()['data'] ?? [];
-$listRas = $ras->getAll()['data'] ?? [];
-$editData = null;
-if (isset($_GET['edit'])) {
-    $editData = $pet->getById($_GET['edit']);
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -162,7 +80,7 @@ if (isset($_GET['edit'])) {
                 <a href="Datapet.php" class="btn btn-delete">Batal</a>
               <?php else: ?>
                 <button type="submit" name="tambah" class="btn btn-add">Tambah</button>
-                <a href="../../../views/admin/datamaster.php" class="btn btn-back">← Kembali</a>
+                <a href="{{ route('admin.datamaster') }}" class="btn btn-back">← Kembali</a>
               <?php endif; ?>
           </form>
       </div>

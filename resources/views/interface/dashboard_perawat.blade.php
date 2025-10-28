@@ -5,13 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Cek login & role
-if (!isset($_SESSION['user']) || strtolower($_SESSION['user']['role']) !== 'perawat') {
-    header("Location: ../interface/login.php");
+if (!session()->has('user') || strtolower(session('user.role')) !== 'perawat') {
+    header('Location: /login');
     exit;
 }
 
 // Ambil nama dari session
-$namaPerawat = $_SESSION['user']['nama'] ?? 'Perawat';
+$namaPerawat = session('user.nama') ?? 'Perawat';
 ?>
 <!DOCTYPE html>
 <html lang="id">

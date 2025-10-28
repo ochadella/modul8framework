@@ -2,47 +2,34 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // ✅ sesuaikan nama tabel di database (kalau tabel kamu bernama 'user', bukan 'users')
+    protected $table = 'user';
+
+    // ✅ sesuaikan primary key dengan kolom di tabel kamu
+    protected $primaryKey = 'iduser';
+
+    // ✅ kolom yang boleh diisi massal
     protected $fillable = [
-        'name',
+        'nama',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    // (opsional) kalau kamu ingin menonaktifkan timestamps
+    // public $timestamps = false;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // ✅ relasi ke tabel Role (DIPERLUKAN supaya User::with('roles') tidak error)
+    public function roles()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        // sesuaikan nama tabel pivot dan kolom FK sesuai struktur database kamu
+        return $this->belongsToMany(Role::class, 'user_role', 'iduser', 'idrole');
     }
 }

@@ -1,15 +1,4 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// cek login
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-?>
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -242,18 +231,17 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
     <!-- Sidebar -->
     <div class="sidebar">
         <h2>Data Master</h2>
-        <a href="../../interface/dashboard.php">Dashboard</a>
-        <a href="../admin/user/datauser.php">Data User</a>
-        <a href="../admin/role/manajemenrole.php">Manajemen Role</a>
-        <a href="../dokter/jenis/Datajenishewan.php">Jenis Hewan</a>
-        <a href="../dokter/ras/Datarashewan.php">Ras Hewan</a>
-        <a href="../resepsionis/pemilik/Datapemilik.php">Data Pemilik</a>
-        <!-- ✅ perbaikan path Data Pet -->
-        <a href="../resepsionis/pet/Datapet.php">Data Pet</a>
-        <a href="../admin/kategori/Datakategori.php">Kategori</a>
-        <a href="../admin/kategoriklinis/DataKategoriKlinis.php">Kategori Klinis</a>
-        <a href="/TM2_OOP/views/admin/kodetindakan/DataTindakan.php">Kode Tindakan</a>
-        <a href="../../interface/login.php" class="logout">🚪 Logout</a>
+        <a href="{{ route('interface.dashboard') }}">Dashboard</a>
+        <a href="{{ route('admin.user.data') }}">Data User</a>
+        <a href="{{ route('admin.role.manajemen') }}">Manajemen Role</a>
+        <a href="{{ route('dokter.jenis.data') }}">Jenis Hewan</a>
+        <a href="{{ route('dokter.ras.data') }}">Ras Hewan</a>
+        <a href="{{ route('resepsionis.pemilik') }}">Data Pemilik</a>
+        <a href="{{ route('resepsionis.pet') }}">Data Pet</a>
+        <a href="{{ route('admin.kategori.data') }}">Kategori</a>
+        <a href="{{ route('admin.kategoriklinis.data') }}">Kategori Klinis</a>
+        <a href="{{ route('admin.kodetindakan.data') }}">Kode Tindakan</a>
+        <a href="{{ route('logout') }}" class="logout">🚪 Logout</a>
     </div>
 
     <!-- Content -->
@@ -265,22 +253,10 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
 
         <!-- Ringkasan Data -->
         <div class="card-container">
-            <div class="card">
-                <h3>Jumlah User</h3>
-                <p>120</p>
-            </div>
-            <div class="card">
-                <h3>Jenis Hewan</h3>
-                <p>15</p>
-            </div>
-            <div class="card">
-                <h3>Ras Hewan</h3>
-                <p>35</p>
-            </div>
-            <div class="card">
-                <h3>Data Pet</h3>
-                <p>250</p>
-            </div>
+            <div class="card"><h3>Jumlah User</h3><p>120</p></div>
+            <div class="card"><h3>Jenis Hewan</h3><p>15</p></div>
+            <div class="card"><h3>Ras Hewan</h3><p>35</p></div>
+            <div class="card"><h3>Data Pet</h3><p>250</p></div>
         </div>
 
         <!-- Grafik -->
@@ -311,15 +287,13 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
 
     <!-- Quick Action Buttons -->
     <div class="quick-actions">
-        <a href="datauser.php">+ Tambah User</a>
-        <a href="Datajenishewan.php">+ Jenis Hewan</a>
-        <!-- ✅ perbaikan path tombol Tambah Pet -->
-        <a href="../resepsionis/pet/Datapet.php">+ Tambah Pet</a>
+        <a href="#">+ Tambah User</a>
+        <a href="#">+ Jenis Hewan</a>
+        <a href="#">+ Tambah Pet</a>
     </div>
 
     <!-- Chart.js Script -->
     <script>
-        // Pie Chart
         const pieCtx = document.getElementById('pieChart').getContext('2d');
         new Chart(pieCtx, {
             type: 'pie',
@@ -334,48 +308,21 @@ if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
             },
             options: {
                 maintainAspectRatio: false,
-                layout: {
-                    padding: {
-                        top: 25,
-                        bottom: 25
-                    }
-                },
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: {
-                                size: 14,
-                                weight: 'bold'
-                            },
-                            padding: 18
-                        }
-                    }
-                }
+                layout: { padding: { top: 25, bottom: 25 }},
+                plugins: { legend: { position: 'bottom', labels: { font: { size: 14, weight: 'bold' }, padding: 18 }}}
             }
         });
 
-        // Bar Chart
         const barCtx = document.getElementById('barChart').getContext('2d');
         new Chart(barCtx, {
             type: 'bar',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei'],
-                datasets: [{
-                    label: 'Jumlah Pet',
-                    data: [30, 45, 60, 50, 65],
-                    backgroundColor: '#f9a01b'
-                }]
+                datasets: [{ label: 'Jumlah Pet', data: [30, 45, 60, 50, 65], backgroundColor: '#f9a01b' }]
             },
             options: {
-                scales: {
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                }
+                scales: { y: { beginAtZero: true }},
+                plugins: { legend: { display: false }}
             }
         });
     </script>

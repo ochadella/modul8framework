@@ -1,42 +1,8 @@
-<?php
-require_once(__DIR__ . '/../../../config/koneksiDB.php');
-
-$db = new DBConnection();
-$koneksi = $db->getConnection();
-
-session_start();
-
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: ../../interface/login.php");
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tambah_tindakan'])) {
-    $kode_tindakan = $_POST['kode_tindakan'];
-    $nama_tindakan = $_POST['nama_tindakan'];
-    $harga = $_POST['harga'];
-
-    $query = "INSERT INTO tindakan (kode_tindakan, nama_tindakan, harga) VALUES ('$kode_tindakan', '$nama_tindakan', '$harga')";
-    mysqli_query($koneksi, $query);
-    header("Location: DataTindakan.php");
-    exit;
-}
-
-if (isset($_GET['hapus'])) {
-    $id = $_GET['hapus'];
-    mysqli_query($koneksi, "DELETE FROM tindakan WHERE id_tindakan='$id'");
-    header("Location: DataTindakan.php");
-    exit;
-}
-
-$result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DESC");
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Data Tindakan</title>
+    <title>Data Kode Tindakan</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -44,7 +10,6 @@ $result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DE
             background: #eef1f7;
         }
 
-        /* Header bar atas */
         .header {
             background: #102f76;
             color: #fff;
@@ -53,22 +18,24 @@ $result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DE
             justify-content: space-between;
             align-items: center;
         }
+
         .header h1 {
             font-size: 20px;
             margin: 0;
             color: #f9a01b;
         }
+
         .header nav a {
             color: #fff;
             text-decoration: none;
             margin-left: 25px;
             font-weight: 500;
         }
+
         .header nav a:hover {
             color: #f9a01b;
         }
 
-        /* Container utama */
         .container {
             width: 90%;
             margin: 30px auto;
@@ -78,7 +45,6 @@ $result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DE
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* Judul di tengah */
         .title-container {
             text-align: center;
             margin-bottom: 25px;
@@ -93,7 +59,6 @@ $result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DE
             display: inline-block;
         }
 
-        /* Tombol kembali */
         .back {
             display: inline-block;
             margin-bottom: 15px;
@@ -101,11 +66,11 @@ $result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DE
             text-decoration: none;
             font-weight: bold;
         }
+
         .back:hover {
             color: #f9a01b;
         }
 
-        /* Form tambah */
         .form-card {
             background: #fff;
             border-radius: 10px;
@@ -129,6 +94,7 @@ $result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DE
             font-size: 14px;
             transition: all 0.2s ease;
         }
+
         .form-tambah input:focus {
             border-color: #102f76;
             box-shadow: 0 0 5px rgba(16,47,118,0.3);
@@ -145,12 +111,12 @@ $result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DE
             cursor: pointer;
             transition: all 0.3s ease;
         }
+
         .form-tambah button:hover {
             background: #102f76;
             color: #fff;
         }
 
-        /* Table styling */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -189,64 +155,81 @@ $result = mysqli_query($koneksi, "SELECT * FROM tindakan ORDER BY id_tindakan DE
             font-size: 13px;
             transition: 0.3s;
         }
+
         .btn-delete:hover {
             background: #b02a37;
         }
     </style>
+</head>
+<body>
+
 <div class="header">
     <h1>🐾 Kode Tindakan</h1>
     <nav>
-        <a href="../../../interface/dashboard.php">Dashboard</a>
-        <a href="../datamaster.php">Data Master</a>
-        <a href="../../../interface/login.php">Logout</a>
+        <a href="{{ url('dashboard_admin') }}">Dashboard</a>
+        <a href="{{ url('admin/datamaster') }}">Data Master</a>
+        <a href="{{ url('logout') }}">Logout</a>
     </nav>
 </div>
 
-    <div class="container">
-        <a href="../datamaster.php" class="back">← Kembali ke Data Master</a>
-        
-        <div class="title-container">
-            <h2>Data Tindakan</h2>
-        </div>
+<div class="container">
+    <a href="{{ url('admin/datamaster') }}" class="back">← Kembali ke Data Master</a>
+    
+    <div class="title-container">
+        <h2>Data Tindakan</h2>
+    </div>
 
-        <div class="form-card">
-            <form method="POST" class="form-tambah">
-                <input type="text" name="kode_tindakan" placeholder="Kode Tindakan" required>
-                <input type="text" name="nama_tindakan" placeholder="Nama Tindakan" required>
-                <input type="number" name="harga" placeholder="Harga (Rp)" required>
-                <button type="submit" name="tambah_tindakan">Tambah</button>
-            </form>
+    {{-- Notifikasi sukses --}}
+    @if(session('success'))
+        <div style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:6px;padding:10px;margin-bottom:15px;">
+            {{ session('success') }}
         </div>
+    @endif
 
-        <table>
-            <thead>
+    {{-- Form Tambah Data --}}
+    <div class="form-card">
+        <form method="POST" action="{{ route('admin.kodetindakan.store') }}" class="form-tambah">
+            @csrf
+            <input type="text" name="kode_tindakan" placeholder="Kode Tindakan" required>
+            <input type="text" name="nama_tindakan" placeholder="Nama Tindakan" required>
+            <input type="number" name="harga" placeholder="Harga (Rp)" required>
+            <button type="submit">Tambah</button>
+        </form>
+    </div>
+
+    {{-- Tabel Data --}}
+    <table>
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Kode Tindakan</th>
+                <th>Nama Tindakan</th>
+                <th>Harga (Rp)</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php $no = 1; @endphp
+            @forelse($rows as $row)
                 <tr>
-                    <th>No</th>
-                    <th>Kode Tindakan</th>
-                    <th>Nama Tindakan</th>
-                    <th>Harga (Rp)</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                $no = 1;
-                while($row = mysqli_fetch_assoc($result)): ?>
-                <tr>
-                    <td><?= $no++; ?></td>
-                    <td><?= htmlspecialchars($row['kode_tindakan']); ?></td>
-                    <td><?= htmlspecialchars($row['nama_tindakan']); ?></td>
-                    <td><?= number_format($row['harga'], 0, ',', '.'); ?></td>
+                    <td>{{ $no++ }}</td>
+                    <td>{{ $row->kode_tindakan ?? '-' }}</td>
+                    <td>{{ $row->nama_tindakan ?? '-' }}</td>
+                    <td>{{ number_format($row->harga ?? 0, 0, ',', '.') }}</td>
                     <td>
-                        <a href="DataTindakan.php?hapus=<?= $row['id_tindakan']; ?>" onclick="return confirm('Hapus data ini?')">
-                            <button class="btn-delete">Hapus</button>
-                        </a>
+                        <form method="GET" action="{{ url('/admin/kodetindakan/delete/' . $row->id_tindakan) }}" onsubmit="return confirm('Hapus data ini?')">
+                            <button type="submit" class="btn-delete">Hapus</button>
+                        </form>
                     </td>
                 </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-    </div>
+            @empty
+                <tr>
+                    <td colspan="5" style="text-align:center;color:#777;">Belum ada data</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

@@ -1,47 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-
-require_once __DIR__ . "/../../../config/koneksiDB.php";
-require_once __DIR__ . "/../../../classes/Kategori.php";
-
-$db = new DBConnection();
-$kategori = new Kategori($db);
-
-// Tambah
-if (isset($_POST['tambah'])) {
-    $nama = $_POST['nama_kategori'];
-    $kategori->create($nama);
-    header("Location: Datakategori.php");
-    exit;
-}
-
-// Update
-if (isset($_POST['update'])) {
-    $id = $_POST['idkategori'];
-    $nama = $_POST['nama_kategori'];
-    $kategori->update($id, $nama);
-    header("Location: Datakategori.php");
-    exit;
-}
-
-// Hapus
-if (isset($_GET['delete'])) {
-    $kategori->delete($_GET['delete']);
-    header("Location: Datakategori.php");
-    exit;
-}
-
-// Data
-$rows = $kategori->getAll()['data'] ?? [];
-$editData = null;
-if (isset($_GET['edit'])) {
-    $editData = $kategori->getById($_GET['edit']);
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -74,42 +30,48 @@ tr:hover td{background:rgba(249,160,27,0.08);}
 <div class="navbar">
     <span>📂 Kategori</span>
     <span>
-        <a href="dashboard.php">Dashboard</a>
-        <a href="datamaster.php">Data Master</a>
-        <a href="logout.php">Logout</a>
+        <a href="{{ route('interface.dashboard') }}">Dashboard</a>
+        <a href="{{ route('admin.datamaster') }}">Data Master</a>
+        <a href="{{ route('logout') }}">Logout</a>
     </span>
 </div>
+
 <div class="content">
     <h2>Data Kategori</h2>
     <div class="form-card">
-        <form method="post">
-            <input type="hidden" name="idkategori" value="<?= $editData['idkategori'] ?? '' ?>">
+        <form method="post" action="">
+            @csrf
+            <input type="hidden" name="idkategori" value="{{ $editData['idkategori'] ?? '' }}">
             <label>Nama Kategori:</label>
-            <input type="text" name="nama_kategori" value="<?= $editData['nama_kategori'] ?? '' ?>" required>
-            <?php if ($editData): ?>
+            <input type="text" name="nama_kategori" value="{{ $editData['nama_kategori'] ?? '' }}" required>
+
+            @if (!empty($editData))
                 <button type="submit" name="update" class="btn btn-edit">Update</button>
-                <a href="Datakategori.php" class="btn btn-delete">Batal</a>
-            <?php else: ?>
+                <a href="{{ route('admin.kategori.data') }}" class="btn btn-delete">Batal</a>
+            @else
                 <button type="submit" name="tambah" class="btn btn-add">Tambah</button>
-                <a href="../../admin/datamaster.php" class="btn btn-back">← Kembali</a>
-            <?php endif; ?>
+                <a href="{{ route('admin.datamaster') }}" class="btn btn-back">← Kembali</a>
+            @endif
         </form>
     </div>
+
     <div class="table-container">
         <table>
             <tr><th>ID</th><th>Nama Kategori</th><th>Aksi</th></tr>
-            <?php if ($rows): foreach($rows as $r): ?>
-                <tr>
-                    <td><?= $r['idkategori'] ?></td>
-                    <td><?= $r['nama_kategori'] ?></td>
-                    <td class="actions">
-                        <a href="Datakategori.php?edit=<?= $r['idkategori'] ?>" class="btn btn-edit">✏ Edit</a>
-                        <a href="Datakategori.php?delete=<?= $r['idkategori'] ?>" class="btn btn-delete" onclick="return confirm('Hapus data ini?')">🗑 Hapus</a>
-                    </td>
-                </tr>
-            <?php endforeach; else: ?>
+            @if (!empty($rows) && count($rows) > 0)
+                @foreach($rows as $r)
+                    <tr>
+                        <td>{{ $r['idkategori'] }}</td>
+                        <td>{{ $r['nama_kategori'] }}</td>
+                        <td class="actions">
+                            <a href="{{ route('admin.kategori.data') }}?edit={{ $r['idkategori'] }}" class="btn btn-edit">✏ Edit</a>
+                            <a href="{{ route('admin.kategori.data') }}?delete={{ $r['idkategori'] }}" class="btn btn-delete" onclick="return confirm('Hapus data ini?')">🗑 Hapus</a>
+                        </td>
+                    </tr>
+                @endforeach
+            @else
                 <tr><td colspan="3" style="text-align:center;color:#666;">Belum ada data</td></tr>
-            <?php endif; ?>
+            @endif
         </table>
     </div>
 </div>

@@ -1,54 +1,8 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-
-require_once __DIR__ . "/../../../config/koneksiDB.php";
-require_once __DIR__ . "/../../../classes/JenisHewan.php";
-
-$db = new DBConnection();
-$jenis = new JenisHewan($db);
-
-// Tambah
-if (isset($_POST['tambah'])) {
-    $nama = $_POST['nama'];
-    $jenis->create($nama);
-    header("Location: Datajenishewan.php");
-    exit;
-}
-
-// Update
-if (isset($_POST['update'])) {
-    $id   = $_POST['id'];
-    $nama = $_POST['nama'];
-    $jenis->update($id, $nama);
-    header("Location: Datajenishewan.php");
-    exit;
-}
-
-// Hapus
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $jenis->delete($id);
-    header("Location: Datajenishewan.php");
-    exit;
-}
-
-// Data
-$result = $jenis->getAll();
-$rows = $result['data'] ?? [];
-
-// Data edit
-$editData = null;
-if (isset($_GET['edit'])) {
-    $editData = $jenis->getById($_GET['edit']);
-}
+if (!isset($editData)) $editData = null;
+if (!isset($rows)) $rows = [];
 ?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -95,23 +49,23 @@ if (isset($_GET['edit'])) {
         </span>
     </div>
 
-
   <!-- Content -->
   <div class="content">
       <h2>Data Jenis Hewan</h2>
 
       <!-- Form Tambah/Edit -->
       <div class="form-card">
-          <form method="post">
-              <input type="hidden" name="id" value="<?= $editData['idjenis_hewan'] ?? '' ?>">
+          <form method="post" action="">
+              @csrf
+              <input type="hidden" name="id" value="<?= $editData->idjenis_hewan ?? '' ?>">
               <label>Nama Jenis:</label>
-              <input type="text" name="nama" value="<?= $editData['nama_jenis_hewan'] ?? '' ?>" required>
+              <input type="text" name="nama" value="<?= $editData->nama_jenis_hewan ?? '' ?>" required>
               <?php if ($editData): ?>
                 <button type="submit" name="update" class="btn btn-edit">Update</button>
-                <a href="Datajenishewan.php" class="btn btn-delete">Batal</a>
+                <a href="{{ route('dokter.jenis.data') }}" class="btn btn-delete">Batal</a>
               <?php else: ?>
                 <button type="submit" name="tambah" class="btn btn-add">Tambah</button>
-                <a href="../../admin/datamaster.php" class="btn btn-back">← Kembali</a>
+                <a href="../../admin/datamaster" class="btn btn-back">← Kembali</a>
               <?php endif; ?>
           </form>
       </div>
@@ -122,11 +76,11 @@ if (isset($_GET['edit'])) {
             <tr><th>ID</th><th>Nama Jenis</th><th>Aksi</th></tr>
             <?php if (!empty($rows)): foreach ($rows as $r): ?>
               <tr>
-                <td><?= $r['idjenis_hewan'] ?></td>
-                <td><?= $r['nama_jenis_hewan'] ?></td>
+                <td><?= $r->idjenis_hewan ?></td>
+                <td><?= $r->nama_jenis_hewan ?></td>
                 <td class="actions">
-                  <a href="Datajenishewan.php?edit=<?= $r['idjenis_hewan'] ?>" class="btn btn-edit">✏ Edit</a>
-                  <a href="Datajenishewan.php?delete=<?= $r['idjenis_hewan'] ?>" class="btn btn-delete" onclick="return confirm('Hapus data ini?')">🗑 Hapus</a>
+                  <a href="{{ route('dokter.jenis.edit', $r->idjenis_hewan) }}" class="btn btn-edit">✏ Edit</a>
+                  <a href="{{ route('dokter.jenis.delete', $r->idjenis_hewan) }}" class="btn btn-delete" onclick="return confirm('Hapus data ini?')">🗑 Hapus</a>
                 </td>
               </tr>
             <?php endforeach; else: ?>

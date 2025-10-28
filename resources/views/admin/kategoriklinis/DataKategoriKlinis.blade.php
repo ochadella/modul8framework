@@ -1,35 +1,3 @@
-<?php
-require_once(__DIR__ . '/../../../config/koneksiDB.php');
-require_once(__DIR__ . '/../../../classes/KategoriKlinis.php');
-
-$kategori = new KategoriKlinis();
-
-// ✅ Perbaikan kecil di bagian tambah kategori
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tambah_kategori'])) {
-    $nama = trim($_POST['nama_kategori']);
-    $desk = trim($_POST['deskripsi']);
-
-    if (!empty($nama) && !empty($desk)) {
-        // Gunakan koneksi manual agar tidak error "private property"
-        $conn = new mysqli("127.0.0.1", "root", "Konikulaposero25", "kuliah_wf_2025");
-        if ($conn->connect_error) {
-            die("Koneksi gagal: " . $conn->connect_error);
-        }
-
-        $stmt = $conn->prepare("INSERT INTO kategori_klinis (nama_kategori_klinis, deskripsi) VALUES (?, ?)");
-        $stmt->bind_param("ss", $nama, $desk);
-        $stmt->execute();
-        $stmt->close();
-        $conn->close();
-    }
-
-    header("Location: DataKategoriKlinis.php");
-    exit;
-}
-
-$result = $kategori->readAll();
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -237,14 +205,15 @@ $result = $kategori->readAll();
         
         <div class="top-buttons">
             <!-- Form input langsung -->
-            <form method="POST" class="form-inline">
-                <input type="text" name="nama_kategori" placeholder="Nama Kategori" required>
+            <form method="POST" class="form-inline" action="{{ route('admin.kategoriklinis.store') }}">
+                @csrf
+                <input type="text" name="nama_kategori_klinis" placeholder="Nama Kategori" required>
                 <input type="text" name="deskripsi" placeholder="Deskripsi" required>
                 <button type="submit" name="tambah_kategori">Tambah</button>
             </form>
 
             <!-- Tombol kembali -->
-            <a href="../DataMaster.php" class="btn back-btn">← Kembali</a>
+            <a href="{{ route('admin.datamaster') }}" class="btn back-btn">← Kembali</a>
         </div>
 
         <table>
@@ -254,27 +223,26 @@ $result = $kategori->readAll();
                 <th>Deskripsi</th>
                 <th>Aksi</th>
             </tr>
-            <?php
-            $no = 1;
-            while ($row = $result->fetch_assoc()) {
-                $nama = $row['nama_kategori_klinis'] ?? ($row['nama_kategori'] ?? ($row['nama'] ?? ''));
-                $desk = $row['deskripsi'] ?? ($row['keterangan'] ?? '');
-                $id   = $row['idkategori_klinis'] ?? ($row['id_kategori'] ?? ($row['id'] ?? ''));
-
-                echo "<tr>
-                    <td>{$no}</td>
-                    <td>{$nama}</td>
-                    <td>{$desk}</td>
+            @php $no = 1; @endphp
+            @forelse($rows as $row)
+                <tr>
+                    <td>{{ $no++ }}</td>
+                    <td>{{ $row['nama_kategori_klinis'] ?? '-' }}</td>
+                    <td>{{ $row['deskripsi'] ?? '-' }}</td>
                     <td>
-                        <a href='Editkategori.php?id={$id}'><button class='action-btn edit-btn'>✏️ Edit</button></a>
-                        <a href='Hapuskategori.php?id={$id}' onclick='return confirm(\"Yakin hapus?\")'>
-                            <button class='action-btn delete-btn'>🗑 Hapus</button>
+                        <a href="{{ route('admin.kategoriklinis.edit', $row['idkategori_klinis']) }}">
+                            <button class="action-btn edit-btn">✏️ Edit</button>
+                        </a>
+                        <a href="{{ route('admin.kategoriklinis.delete', $row['idkategori_klinis']) }}" onclick="return confirm('Yakin hapus?')">
+                            <button class="action-btn delete-btn">🗑 Hapus</button>
                         </a>
                     </td>
-                </tr>";
-                $no++;
-            }
-            ?>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" style="text-align:center;color:#777;">Belum ada data</td>
+                </tr>
+            @endforelse
         </table>
     </div>
 </body>

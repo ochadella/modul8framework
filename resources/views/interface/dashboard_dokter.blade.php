@@ -2,12 +2,12 @@
 session_start();
 
 // 🚨 Cek apakah user sudah login dan rolenya dokter
-if (!isset($_SESSION['user']) || strtolower($_SESSION['user']['role']) !== 'dokter') {
-    header('Location: login.php');
+if (!session()->has('user') || strtolower(session('user.role')) !== 'dokter') {
+    header('Location: /login');
     exit;
 }
 
-$nama = $_SESSION['user']['nama'] ?? 'Dokter';
+$nama = session('user.nama') ?? 'Dokter';
 ?>
 <!DOCTYPE html>
 <html lang="id">

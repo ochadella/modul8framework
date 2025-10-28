@@ -1,30 +1,3 @@
- <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-
-require_once __DIR__ . "/../../../config/koneksiDB.php"; 
-require_once __DIR__ . "/../../../classes/user.php";      
-
-$db = new DBConnection();
-$user = new User($db);
-
-// Tambah user
-if (isset($_POST['simpan'])) {
-    $nama  = $_POST['nama'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $user->create($nama, $email, $password);
-
-    header("Location: datauser.php");
-    exit;
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -115,9 +88,10 @@ if (isset($_POST['simpan'])) {
     <div class="navbar">
         <span>➕ Tambah User</span>
         <span>
-            <a href="dashboard.php">Dashboard</a>
-            <a href="datamaster.php">Data Master</a>
-            <a href="logout.php">Logout</a>
+            <!-- ganti .php ke url() agar tidak 500/404 -->
+            <a href="{{ route('interface.dashboard') }}">Dashboard</a>
+            <a href="{{ route('admin.datamaster') }}">Data Master</a>
+            <a href="{{ route('login') }}">Logout</a>
         </span>
     </div>
 
@@ -125,7 +99,8 @@ if (isset($_POST['simpan'])) {
     <div class="content">
         <h2>Form Tambah User</h2>
         <div class="form-card">
-            <form method="post">
+            <form method="post" action="">
+                @csrf
                 <label>Nama:</label>
                 <input type="text" name="nama" required>
 
@@ -136,7 +111,7 @@ if (isset($_POST['simpan'])) {
                 <input type="password" name="password" required>
 
                 <button type="submit" name="simpan" class="btn btn-save">💾 Simpan</button>
-                <a href="datauser.php" class="btn btn-back">← Kembali</a>
+                <a href="{{ route('admin.user.data') }}" class="btn btn-back">← Kembali</a>
             </form>
         </div>
     </div>

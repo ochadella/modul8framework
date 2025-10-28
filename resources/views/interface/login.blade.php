@@ -14,7 +14,7 @@ if (isset($_POST['login'])) {
             'password' => '123456',
             'nama' => 'Admin RSHP',
             'role' => 'admin',
-            'redirect' => '../interface/dashboard.php'
+            'redirect' => '/interface/dashboard'
         ],
         [
             'email' => 'resepsionis@mail.com',
@@ -22,7 +22,7 @@ if (isset($_POST['login'])) {
             'nama' => 'Resepsionis Angel',
             'role' => 'resepsionis',
             // ✅ Path diperbaiki agar menuju ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_resepsionis.php'
+            'redirect' => '../interface/dashboard_resepsionis'
         ],
         [
             // ✅ Tambahan akun kamu
@@ -31,7 +31,7 @@ if (isset($_POST['login'])) {
             'nama' => 'Azzam',
             'role' => 'resepsionis',
             // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_resepsionis.php'
+            'redirect' => '../interface/dashboard_resepsionis'
         ],
         [
             // ✅ Tambahan akun kamu
@@ -40,7 +40,7 @@ if (isset($_POST['login'])) {
             'nama' => 'Angelyna',
             'role' => 'resepsionis',
             // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_resepsionis.php'
+            'redirect' => '../interface/dashboard_resepsionis'
         ],
         [
             // ✅ Tambahan akun kamu
@@ -49,7 +49,7 @@ if (isset($_POST['login'])) {
             'nama' => 'Daffa',
             'role' => 'perawat',
             // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_perawat.php'
+            'redirect' => '../interface/dashboard_perawat'
         ],
         [
             // ✅ Tambahan akun kamu
@@ -58,7 +58,7 @@ if (isset($_POST['login'])) {
             'nama' => 'Ryan',
             'role' => 'perawat',
             // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_perawat.php'
+            'redirect' => '../interface/dashboard_perawat'
         ],
         [
             // ✅ Tambahan akun kamu
@@ -67,7 +67,7 @@ if (isset($_POST['login'])) {
             'nama' => 'ocaa',
             'role' => 'dokter',
             // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_dokter.php'
+            'redirect' => '../interface/dashboard_dokter'
         ],
         [
             // ✅ Tambahan akun kamu
@@ -76,7 +76,7 @@ if (isset($_POST['login'])) {
             'nama' => 'Maysha',
             'role' => 'dokter',
             // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_dokter.php'
+            'redirect' => '../interface/dashboard_dokter'
         ],
         [
             // ✅ Tambahan akun kamu
@@ -85,7 +85,7 @@ if (isset($_POST['login'])) {
             'nama' => 'Ale',
             'role' => 'dokter',
             // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_dokter.php'
+            'redirect' => '../interface/dashboard_dokter'
 
         ]
     ];

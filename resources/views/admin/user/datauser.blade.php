@@ -1,68 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// cek login
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-
-require_once __DIR__ . "/../../../config/koneksiDB.php"; 
-require_once __DIR__ . "/../../../classes/user.php";      
-
-// Buat objek User
-$db = new DBConnection();
-$user = new User($db);
-
-// =============================================
-// ✏️ Tambahan: proses edit user
-// =============================================
-if (isset($_POST['edit_id'])) {
-    $iduser = (int)$_POST['edit_id'];
-    $nama = trim($_POST['nama']);
-    $email = trim($_POST['email']);
-    $role = trim($_POST['role']);
-
-    $conn = $db->getConnection();
-    $stmt = $conn->prepare("UPDATE user SET nama = ?, email = ?, role = ? WHERE iduser = ?");
-    $stmt->bind_param("sssi", $nama, $email, $role, $iduser);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Data user berhasil diperbarui!'); window.location.href='datauser.php';</script>";
-        exit;
-    } else {
-        echo "<script>alert('Gagal memperbarui data user!'); window.location.href='datauser.php';</script>";
-        exit;
-    }
-}
-
-// Ambil semua user
-$result = $user->getAll();
-$users = $result['data'] ?? [];
-
-// =============================================
-// 🔑 Tambahan: proses reset password
-// =============================================
-if (isset($_GET['reset_id'])) {
-    $iduser = (int)$_GET['reset_id'];
-    $newPassword = "123456"; // password default baru
-    $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
-
-    $conn = $db->getConnection();
-    $stmt = $conn->prepare("UPDATE user SET password = ? WHERE iduser = ?");
-    $stmt->bind_param("si", $hashed, $iduser);
-
-    if ($stmt->execute()) {
-        echo "<script>alert('Password berhasil di-reset ke: 123456'); window.location.href='datauser.php';</script>";
-        exit;
-    } else {
-        echo "<script>alert('Gagal mereset password!'); window.location.href='datauser.php';</script>";
-        exit;
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -144,7 +79,8 @@ if (isset($_GET['reset_id'])) {
         th:nth-child(1), td:nth-child(1) { width: 8%; }
         th:nth-child(2), td:nth-child(2) { width: 20%; }
         th:nth-child(3), td:nth-child(3) { width: 27%; }
-        th:nth-child(4), td:nth-child(4) { width: 31%; }
+        th:nth-child(4), td:nth-child(4) { width: 25%; }
+        th:nth-child(5), td:nth-child(5) { width: 20%; }
         th {
             background: #102f76;
             color: #fff;
@@ -169,9 +105,9 @@ if (isset($_GET['reset_id'])) {
     <div class="navbar">
         <span>📋 Data User</span>
         <span>
-            <a href="../../../interface/dashboard.php">Dashboard</a>
-            <a href="../datamaster.php">Data Master</a>
-            <a href="../../../interface/login.php">Logout</a>
+            <a href="{{ url('dashboard') }}">Dashboard</a>
+            <a href="{{ url('admin/datamaster') }}">Data Master</a>
+            <a href="{{ url('logout') }}">Logout</a>
         </span>
     </div>
 
@@ -179,8 +115,8 @@ if (isset($_GET['reset_id'])) {
         <h2>Daftar User</h2>
 
         <div style="margin-bottom: 15px;">
-            <a href="../datamaster.php" class="btn btn-back">← Kembali</a>
-            <a href="tambahuser.php" class="btn btn-add">+ Tambah User</a>
+            <a href="{{ url()->previous() }}" class="btn btn-back">← Kembali</a>
+            <a href="{{ url('admin/user/tambahuser') }}" class="btn btn-add">+ Tambah User</a>
         </div>
 
         <div class="table-container">
@@ -192,30 +128,33 @@ if (isset($_GET['reset_id'])) {
                     <th>Role</th>
                     <th>Aksi</th>
                 </tr>
-                <?php if (!empty($users)): ?>
-                    <?php foreach($users as $row): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($row['iduser']) ?></td>
-                        <td><?= htmlspecialchars($row['nama']) ?></td>
-                        <td><?= htmlspecialchars($row['email']) ?></td>
-                        <td><?= htmlspecialchars($row['role'] ?? '-') ?></td>
-                        <td class="actions">
-                            <button onclick="editUser(<?= $row['iduser'] ?>, '<?= htmlspecialchars($row['nama']) ?>', '<?= htmlspecialchars($row['email']) ?>', '<?= htmlspecialchars($row['role'] ?? '') ?>')" class="btn btn-edit">✏ Edit</button>
-                            <a href="datauser.php?reset_id=<?= $row['iduser'] ?>" class="btn btn-reset" onclick="return confirm('Reset password user ini ke 123456?')">🔑 Reset</a>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
+
+                {{-- ✅ Ganti PHP native jadi Blade syntax --}}
+                @if($users->count())
+                    @foreach($users as $row)
+                        <tr>
+                            <td>{{ $row->iduser }}</td>
+                            <td>{{ $row->nama }}</td>
+                            <td>{{ $row->email }}</td>
+                            <td>{{ $row->role ?? '-' }}</td>
+                            <td class="actions">
+                                <button onclick="editUser({{ $row->iduser }}, '{{ $row->nama }}', '{{ $row->email }}', '{{ $row->role ?? '' }}')" class="btn btn-edit">✏ Edit</button>
+                                <a href="{{ url('admin/user/reset/'.$row->iduser) }}" class="btn btn-reset" onclick="return confirm('Reset password user ini ke 123456?')">🔑 Reset</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr>
                         <td colspan="5" style="text-align:center; color:#666;">Belum ada data user</td>
                     </tr>
-                <?php endif; ?>
+                @endif
             </table>
         </div>
     </div>
 
     <!-- Form Edit (hidden) -->
     <form method="POST" id="editForm" style="display:none;">
+        @csrf
         <input type="hidden" name="edit_id" id="edit_id">
         <input type="hidden" name="nama" id="edit_nama">
         <input type="hidden" name="email" id="edit_email">

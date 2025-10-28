@@ -1,61 +1,3 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (!isset($_SESSION['user']) || $_SESSION['user']['logged_in'] !== true) {
-    header("Location: login.php");
-    exit;
-}
-
-require_once __DIR__ . "../../../../config/koneksiDB.php";
-require_once __DIR__ . "../../../../classes/RasHewan.php";
-require_once __DIR__ . "../../../../classes/JenisHewan.php";
-
-$db = new DBConnection();
-$ras   = new RasHewan($db);
-$jenis = new JenisHewan($db);
-
-// Tambah
-if (isset($_POST['tambah'])) {
-    $nama = $_POST['nama'];
-    $idjenis = $_POST['idjenis_hewan'];
-    $ras->create($nama, $idjenis);
-    header("Location: Datarashewan.php");
-    exit;
-}
-
-// Update
-if (isset($_POST['update'])) {
-    $id = $_POST['id'];
-    $nama = $_POST['nama'];
-    $idjenis = $_POST['idjenis_hewan'];
-    $ras->update($id, $nama, $idjenis);
-    header("Location: Datarashewan.php");
-    exit;
-}
-
-// Hapus
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
-    $ras->delete($id);
-    header("Location: Datarashewan.php");
-    exit;
-}
-
-// Data ras
-$result = $ras->getAll();
-$rows = $result['data'] ?? [];
-
-// Data jenis untuk dropdown
-$listJenis = $jenis->getAll()['data'] ?? [];
-
-// Data edit
-$editData = null;
-if (isset($_GET['edit'])) {
-    $editData = $ras->getById($_GET['edit']);
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -169,9 +111,9 @@ if (isset($_GET['edit'])) {
   <div class="navbar">
       <span>🐕 Ras Hewan</span>
       <span>
-          <a href="../../../interface/dashboard.php">Dashboard</a>
-          <a href="../../../views/admin/datamaster.php">Data Master</a>
-          <a href="../../../interface/login.php">Logout</a>
+          <a href="../../../../interface/dashboard.php">Dashboard</a>
+          <a href="../../../admin/datamaster.php">Data Master</a>
+          <a href="../../../../interface/login.php">Logout</a>
       </span>
   </div>
 
@@ -181,30 +123,31 @@ if (isset($_GET['edit'])) {
 
       <!-- Form -->
       <div class="form-card">
-          <form method="post" action="Datarashewan.php">
-              <input type="hidden" name="id" value="<?= $editData['idras_hewan'] ?? '' ?>">
+          <form method="POST" action="{{ $editData ? route('dokter.ras.update', $editData->idras_hewan) : route('dokter.ras.store') }}">
+              @csrf
+              <input type="hidden" name="id" value="{{ old('id', $editData->idras_hewan ?? '') }}">
               
               <label>Nama Ras:</label>
-              <input type="text" name="nama" value="<?= $editData['nama_ras'] ?? '' ?>" required>
+              <input type="text" name="nama_ras" value="{{ old('nama_ras', $editData->nama_ras ?? '') }}" required>
               
               <label>Jenis Hewan:</label>
               <select name="idjenis_hewan" required>
                 <option value="">-- Pilih Jenis Hewan --</option>
-                <?php foreach ($listJenis as $j): ?>
-                  <option value="<?= $j['idjenis_hewan'] ?>" 
-                    <?= ($editData && $editData['idjenis_hewan']==$j['idjenis_hewan']) ? 'selected' : '' ?>>
-                    <?= $j['nama_jenis_hewan'] ?>
-                  </option>
-                <?php endforeach; ?>
+                @foreach ($listJenis as $j)
+                    <option value="{{ $j->idjenis_hewan }}" 
+                        @if(isset($editData) && $editData->idjenis_hewan == $j->idjenis_hewan) selected @endif>
+                        {{ $j->nama_jenis_hewan }}
+                    </option>
+                @endforeach
               </select>
               
-              <?php if ($editData): ?>
-                <button type="submit" name="update" class="btn btn-edit">Update</button>
-                <a href="Datarashewan.php" class="btn btn-delete">Batal</a>
-              <?php else: ?>
-                <button type="submit" name="tambah" class="btn btn-add">Tambah</button>
-                <a href="../../admin/datamaster.php" class="btn btn-back">← Kembali</a>
-              <?php endif; ?>
+              @if (isset($editData))
+                <button type="submit" class="btn btn-edit">Update</button>
+                <a href="{{ route('dokter.ras.data') }}" class="btn btn-delete">Batal</a>
+              @else
+                <button type="submit" class="btn btn-add">Tambah</button>
+                <a href="{{ route('admin.datamaster') }}" class="btn btn-back">← Kembali</a>
+              @endif
           </form>
       </div>
 
@@ -212,19 +155,21 @@ if (isset($_GET['edit'])) {
       <div class="table-container">
           <table>
             <tr><th>ID</th><th>Nama Ras</th><th>Jenis Hewan</th><th>Aksi</th></tr>
-            <?php if (!empty($rows)): foreach ($rows as $r): ?>
+            @if (count($listRas) > 0)
+              @foreach ($listRas as $r)
               <tr>
-                <td><?= $r['idras_hewan'] ?></td>
-                <td><?= $r['nama_ras'] ?></td>
-                <td><?= $r['nama_jenis_hewan'] ?></td>
+                <td>{{ $r->idras_hewan }}</td>
+                <td>{{ $r->nama_ras }}</td>
+                <td>{{ $r->nama_jenis_hewan }}</td>
                 <td class="actions">
-                  <a href="Datarashewan.php?edit=<?= $r['idras_hewan'] ?>" class="btn btn-edit">✏ Edit</a>
-                  <a href="Datarashewan.php?delete=<?= $r['idras_hewan'] ?>" class="btn btn-delete" onclick="return confirm('Hapus data ini?')">🗑 Hapus</a>
+                  <a href="{{ route('dokter.ras.edit', $r->idras_hewan) }}" class="btn btn-edit">✏ Edit</a>
+                  <a href="{{ route('dokter.ras.delete', $r->idras_hewan) }}" class="btn btn-delete" onclick="return confirm('Hapus data ini?')">🗑 Hapus</a>
                 </td>
               </tr>
-            <?php endforeach; else: ?>
+              @endforeach
+            @else
               <tr><td colspan="4" style="text-align:center; color:#666;">Belum ada data</td></tr>
-            <?php endif; ?>
+            @endif
           </table>
       </div>
   </div>

@@ -3,232 +3,603 @@
 <head>
     <meta charset="UTF-8">
     <title>Data Kode Tindakan</title>
+
+    <!-- BOOTSTRAP ICONS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
+        /* =====================================================
+           🌟 BACKGROUND GRADIENT ELEGANT ORANGE SOFT
+        ====================================================== */
         body {
+            margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            margin: 0;
-            background: #eef1f7;
+            background: linear-gradient(
+                180deg,
+                #ffffff 0%,
+                #fff7ef 20%,
+                #ffe6bf 50%,
+                #ffcf86 80%,
+                #ffb74a 100%
+            );
+            background-attachment: fixed;
         }
 
-        .header {
-            background: #102f76;
-            color: #fff;
-            padding: 15px 40px;
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(
+                circle at bottom,
+                rgba(255,170,40,0.22),
+                transparent 60%
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ================= NAVBAR (TOP) ================= */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: linear-gradient(135deg, #102f76 0%, #142a46 100%);
+            color: #ffffff;
+            padding: 14px 32px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.25);
         }
 
-        .header h1 {
-            font-size: 20px;
-            margin: 0;
-            color: #f9a01b;
-        }
-
-        .header nav a {
-            color: #fff;
-            text-decoration: none;
-            margin-left: 25px;
-            font-weight: 500;
-        }
-
-        .header nav a:hover {
-            color: #f9a01b;
-        }
-
-        .container {
-            width: 90%;
-            margin: 30px auto;
-            background: #fff;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .title-container {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        h2 {
-            color: #102f76;
-            font-weight: bold;
-            margin: 0 auto;
-            border-bottom: 3px solid #f9a01b;
-            padding-bottom: 8px;
-            display: inline-block;
-        }
-
-        .back {
-            display: inline-block;
-            margin-bottom: 15px;
-            color: #102f76;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .back:hover {
-            color: #f9a01b;
-        }
-
-        .form-card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            padding: 25px;
-            margin-bottom: 25px;
-        }
-
-        .form-tambah {
+        .nav-left {
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            font-size: 30px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .brand-text-title {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .brand-text-sub {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .nav-center {
+            flex: 1;
+            display: flex;
             justify-content: center;
+            padding: 0 40px;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border-radius: 999px;
+            padding: 6px 14px;
+            min-width: 280px;
+            max-width: 420px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-search i {
+            color: #102f76;
+            font-size: 16px;
+        }
+
+        .nav-search input {
+            border: none;
+            outline: none;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
 
-        .form-tambah input {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            width: 220px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .form-tambah input:focus {
-            border-color: #102f76;
-            box-shadow: 0 0 5px rgba(16,47,118,0.3);
-            outline: none;
-        }
-
-        .form-tambah button {
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
             background: #f9a01b;
-            border: none;
             color: #102f76;
-            font-weight: bold;
-            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.35);
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .btn-logout {
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            background: #f5594b;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(245,89,75,0.5);
+        }
+
+        .btn-logout:hover {
+            filter: brightness(1.05);
+        }
+
+        /* ================= LAYOUT: SIDEBAR + MAIN ================= */
+        .layout {
+            max-width: 1400px;
+            margin: 24px auto 40px;
+            display: flex;
+            gap: 22px;
+        }
+
+        /* ---------- SIDEBAR ---------- */
+        .sidebar {
+            width: 230px;
+            background: linear-gradient(180deg, #102f76 0%, #142a46 100%);
+            border-radius: 18px;
+            padding: 20px 16px 24px;
+            color: #ffffff;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+        }
+
+        .sidebar-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            padding: 4px 6px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .sidebar-title i {
+            font-size: 18px;
+            padding: 6px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            color: #e6efff;
+            font-size: 13px;
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+
+        .sidebar-link i {
+            font-size: 16px;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(249,160,27,0.2);
+            color: #ffffff;
+        }
+
+        .sidebar-section {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.6;
+            margin: 10px 4px 4px;
+        }
+
+        /* ---------- MAIN AREA ---------- */
+        .main-area {
+            flex: 1;
+        }
+
+        /* ================= CENTERED PAGE HEADER ================= */
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .page-header-icon {
+            font-size: 54px;
+            color: #102f76;
+            background: #f9a01b33;
+            padding: 20px;
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            margin-top: 18px;
+            font-size: 34px;
+            color: #102f76;
+            font-weight: 800;
+        }
+
+        .page-header p {
+            margin-top: -6px;
+            font-size: 15px;
+            color: #3c3c3c;
+        }
+
+        /* ================= CONTAINER CARD ================= */
+        .container {
+            margin: 0 auto;
+            max-width: 100%;
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 32px 36px 40px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+            animation: fadeIn 0.45s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= BUTTONS ================= */
+        .btn-add {
+            padding: 12px 20px;
+            background: linear-gradient(90deg, #f9a01b, #ffba4c);
+            color: #102f76;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(249,160,27,0.35);
+            display: inline-block;
+        }
+
+        .btn-back {
+            margin-left: 10px;
             padding: 10px 18px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
         }
 
-        .form-tambah button:hover {
-            background: #102f76;
-            color: #fff;
-        }
-
+        /* ================= TABLE ================= */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            border-radius: 8px;
+            margin-top: 28px;
             overflow: hidden;
+            border-radius: 14px;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.10);
         }
 
         th {
-            background: #102f76;
-            color: white;
-            padding: 12px;
-            font-size: 14px;
+            background: linear-gradient(135deg, #102f76 0%, #142a46 100%);
+            color: #f9a01b;
+            padding: 15px;
+            font-size: 16px;
             text-align: center;
         }
 
         td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
+            padding: 14px;
+            background: rgba(255,255,255,0.82);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             text-align: center;
-            background-color: white;
-            font-size: 14px;
+            vertical-align: middle;
         }
 
-        tr:nth-child(even) td {
-            background: #fafafa;
+        tr:hover td {
+            background: rgba(249,160,27,0.13);
         }
 
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
+        /* ================= ACTION ICONS ================= */
+        .action-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            font-size: 22px;
+            color: #102f76;
             cursor: pointer;
-            font-size: 13px;
-            transition: 0.3s;
+            text-decoration: none;
+            border: none;
+            background: transparent;
         }
 
-        .btn-delete:hover {
-            background: #b02a37;
+        .icon-btn:hover {
+            color: #f9a01b;
+            transform: translateY(-2px);
+        }
+
+        /* ================= MODAL ================= */
+        #modalTambah {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-box {
+            width: 420px;
+            background: white;
+            padding: 26px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        .modal-box label {
+            font-weight: 600;
+            color: #102f76;
+            display: block;
+            margin-top: 12px;
+        }
+
+        .modal-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 6px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1100px) {
+            .layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                display: flex;
+                overflow-x: auto;
+            }
+            .sidebar-menu {
+                flex-direction: row;
+                flex-wrap: nowrap;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="header">
-    <h1>🐾 Kode Tindakan</h1>
-    <nav>
-        <a href="{{ url('dashboard_admin') }}">Dashboard</a>
-        <a href="{{ url('admin/datamaster') }}">Data Master</a>
-        <a href="{{ url('logout') }}">Logout</a>
-    </nav>
+@php
+    $user = auth()->user();
+    $displayName = $user->nama ?? $user->name ?? 'User';
+    $displayRole = ucfirst($user->role ?? 'Admin');
+    $initial = strtoupper(mb_substr($displayName, 0, 1));
+@endphp
+
+<!-- TOP NAVBAR -->
+<div class="navbar">
+    <div class="nav-left">
+        <i class="bi bi-hospital nav-logo"></i>
+        <div>
+            <div class="brand-text-title">Klinik Hewan</div>
+            <div class="brand-text-sub">Panel Administrator</div>
+        </div>
+    </div>
+
+    <div class="nav-center">
+        <div class="nav-search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Cari menu atau data kode tindakan...">
+        </div>
+    </div>
+
+    <div class="nav-right">
+        <div class="user-info">
+            <div class="user-avatar">{{ $initial }}</div>
+            <div>
+                <div class="user-name">{{ $displayName }}</div>
+                <div class="user-role">{{ $displayRole }}</div>
+            </div>
+        </div>
+        <a href="{{ route('logout') }}" class="btn-logout">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+    </div>
 </div>
 
-<div class="container">
-    <a href="{{ url('admin/datamaster') }}" class="back">← Kembali ke Data Master</a>
-    
-    <div class="title-container">
-        <h2>Data Tindakan</h2>
-    </div>
+<div class="layout">
 
-    {{-- Notifikasi sukses --}}
-    @if(session('success'))
-        <div style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:6px;padding:10px;margin-bottom:15px;">
-            {{ session('success') }}
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-title">
+            <i class="bi bi-grid-fill"></i>
+            <span>Data Master</span>
         </div>
-    @endif
 
-    {{-- Form Tambah Data --}}
-    <div class="form-card">
-        <form method="POST" action="{{ route('admin.kodetindakan.store') }}" class="form-tambah">
+        <div class="sidebar-menu">
+            <div class="sidebar-section">Dashboard</div>
+            <a href="{{ route('interface.dashboard') }}" class="sidebar-link">
+                <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+            </a>
+
+            <div class="sidebar-section">User & Staff</div>
+            <a href="{{ route('admin.user.data') }}" class="sidebar-link">
+                <i class="bi bi-people-fill"></i><span>Data User</span>
+            </a>
+            <a href="{{ route('admin.dokter.index') }}" class="sidebar-link">
+                <i class="bi bi-stethoscope"></i><span>Data Dokter</span>
+            </a>
+            <a href="{{ route('admin.perawat.index') }}" class="sidebar-link">
+                <i class="bi bi-clipboard2-pulse"></i><span>Data Perawat</span>
+            </a>
+            <a href="{{ route('admin.resepsionis.index') }}" class="sidebar-link">
+                <i class="bi bi-headset"></i><span>Data Resepsionis</span>
+            </a>
+            <a href="{{ route('admin.role.manajemen') }}" class="sidebar-link">
+                <i class="bi bi-shield-lock-fill"></i><span>Manajemen Role</span>
+            </a>
+
+            <div class="sidebar-section">Master Data</div>
+            <a href="{{ route('dokter.jenis.data') }}" class="sidebar-link">
+                <i class="bi bi-ui-checks-grid"></i><span>Jenis Hewan</span>
+            </a>
+            <a href="{{ route('dokter.ras.data') }}" class="sidebar-link">
+                <i class="bi bi-diagram-3-fill"></i><span>Ras Hewan</span>
+            </a>
+            <a href="{{ route('resepsionis.pemilik') }}" class="sidebar-link">
+                <i class="bi bi-person-vcard-fill"></i><span>Data Pemilik</span>
+            </a>
+            <a href="{{ route('resepsionis.pet') }}" class="sidebar-link">
+                <i class="bi bi-bag-heart-fill"></i><span>Data Pet</span>
+            </a>
+            <a href="{{ route('admin.kategori.data') }}" class="sidebar-link">
+                <i class="bi bi-tags-fill"></i><span>Kategori</span>
+            </a>
+            <a href="{{ route('admin.kategoriklinis.data') }}" class="sidebar-link">
+                <i class="bi bi-card-checklist"></i><span>Kategori Klinis</span>
+            </a>
+            <a href="{{ route('admin.kodetindakan.data') }}" class="sidebar-link active">
+                <i class="bi bi-code-square"></i><span>Kode Tindakan</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+
+        <!-- HEADER TENGAH -->
+        <div class="page-header">
+            <i class="bi bi-code-square page-header-icon"></i>
+            <h1>Data Kode Tindakan</h1>
+            <p>Kelola data kode dan harga tindakan medis.</p>
+        </div>
+
+        <!-- KONTEN UTAMA -->
+        <div class="container">
+
+            {{-- Notifikasi sukses --}}
+            @if(session('success'))
+                <div style="background:#d4edda;color:#155724;border:1px solid #c3e6cb;border-radius:8px;padding:12px;margin-bottom:20px;">
+                    <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+                </div>
+            @endif
+
+            <a href="#" class="btn-add" onclick="document.getElementById('modalTambah').style.display='flex'">+ Tambah Kode Tindakan</a>
+            <a href="{{ route('admin.datamaster') }}" class="btn-back">← Kembali</a>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kode Tindakan</th>
+                        <th>Nama Tindakan</th>
+                        <th>Harga (Rp)</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @php $no = 1; @endphp
+                    @forelse($rows as $row)
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>{{ $row->kode_tindakan ?? '-' }}</td>
+                            <td>{{ $row->nama_tindakan ?? '-' }}</td>
+                            <td>{{ number_format($row->harga ?? 0, 0, ',', '.') }}</td>
+
+                            <td>
+                                <div class="action-icons">
+                                    <form method="GET" action="{{ url('/admin/kodetindakan/delete/' . $row->id_tindakan) }}" 
+                                          onsubmit="return confirm('Yakin hapus data tindakan ini?')" style="margin:0;">
+                                        <button type="submit" class="icon-btn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5">Belum ada data</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+        </div><!-- /container -->
+    </div><!-- /main-area -->
+
+</div><!-- /layout -->
+
+<!-- ==================== MODAL ==================== -->
+<div id="modalTambah">
+    <div class="modal-box">
+
+        <h2 style="text-align:center;color:#102f76;margin-top:0">Tambah Kode Tindakan</h2>
+
+        <form method="POST" action="{{ route('admin.kodetindakan.store') }}">
             @csrf
-            <input type="text" name="kode_tindakan" placeholder="Kode Tindakan" required>
-            <input type="text" name="nama_tindakan" placeholder="Nama Tindakan" required>
-            <input type="number" name="harga" placeholder="Harga (Rp)" required>
-            <button type="submit">Tambah</button>
+
+            <label>Kode Tindakan:</label>
+            <input type="text" name="kode_tindakan" placeholder="Contoh: T001" required>
+
+            <label>Nama Tindakan:</label>
+            <input type="text" name="nama_tindakan" placeholder="Contoh: Vaksinasi Rabies" required>
+
+            <label>Harga (Rp):</label>
+            <input type="number" name="harga" placeholder="Contoh: 150000" required>
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
+                <button type="button"
+                        onclick="document.getElementById('modalTambah').style.display='none'"
+                        style="padding:10px 16px;background:#6c757d;border:none;color:#fff;border-radius:8px;cursor:pointer;">
+                    Batal
+                </button>
+
+                <button type="submit"
+                        style="padding:10px 16px;background:#f9a01b;border:none;color:#102f76;font-weight:700;border-radius:8px;cursor:pointer;">
+                    Simpan
+                </button>
+            </div>
         </form>
     </div>
-
-    {{-- Tabel Data --}}
-    <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Kode Tindakan</th>
-                <th>Nama Tindakan</th>
-                <th>Harga (Rp)</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php $no = 1; @endphp
-            @forelse($rows as $row)
-                <tr>
-                    <td>{{ $no++ }}</td>
-                    <td>{{ $row->kode_tindakan ?? '-' }}</td>
-                    <td>{{ $row->nama_tindakan ?? '-' }}</td>
-                    <td>{{ number_format($row->harga ?? 0, 0, ',', '.') }}</td>
-                    <td>
-                        <form method="GET" action="{{ url('/admin/kodetindakan/delete/' . $row->id_tindakan) }}" onsubmit="return confirm('Hapus data ini?')">
-                            <button type="submit" class="btn-delete">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" style="text-align:center;color:#777;">Belum ada data</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
 </div>
 
 </body>

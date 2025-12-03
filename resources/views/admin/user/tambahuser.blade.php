@@ -9,7 +9,6 @@
             font-family: Arial, sans-serif;
             background: #f4f6f9;
         }
-        /* Navbar */
         .navbar {
             background: #102f76;
             padding: 15px 25px;
@@ -34,7 +33,6 @@
         .navbar a:hover {
             color: #f9a01b;
         }
-        /* Content */
         .content {
             padding: 30px;
             max-width: 600px;
@@ -45,7 +43,6 @@
             color: #102f76;
             text-align: center;
         }
-        /* Form Card */
         .form-card {
             background: #fff;
             border-radius: 12px;
@@ -64,7 +61,6 @@
             border: 1px solid #ccc;
             border-radius: 6px;
         }
-        /* Buttons */
         .btn {
             display: inline-block;
             padding: 10px 16px;
@@ -88,7 +84,6 @@
     <div class="navbar">
         <span>➕ Tambah User</span>
         <span>
-            <!-- ganti .php ke url() agar tidak 500/404 -->
             <a href="{{ route('interface.dashboard') }}">Dashboard</a>
             <a href="{{ route('admin.datamaster') }}">Data Master</a>
             <a href="{{ route('login') }}">Logout</a>
@@ -99,7 +94,11 @@
     <div class="content">
         <h2>Form Tambah User</h2>
         <div class="form-card">
-            <form method="post" action="">
+            @if (session('success'))
+                <p style="color: green; font-weight: bold;">{{ session('success') }}</p>
+            @endif
+
+            <form method="POST" action="{{ route('admin.user.store') }}">
                 @csrf
                 <label>Nama:</label>
                 <input type="text" name="nama" required>
@@ -110,7 +109,7 @@
                 <label>Password:</label>
                 <input type="password" name="password" required>
 
-                <button type="submit" name="simpan" class="btn btn-save">💾 Simpan</button>
+                <button type="submit" class="btn btn-save">💾 Simpan</button>
                 <a href="{{ route('admin.user.data') }}" class="btn btn-back">← Kembali</a>
             </form>
         </div>

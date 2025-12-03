@@ -7,49 +7,57 @@ use Illuminate\Support\Facades\DB;
 
 class PetController extends Controller
 {
-    // ✅ TAMPILKAN SEMUA DATA PET
+    // ===========================
+    //  TAMPILKAN DATA PET
+    // ===========================
     public function index()
     {
-        // Ambil semua data pet, join supaya bisa menampilkan nama pemilik dan ras
         $rows = DB::table('pet')
             ->join('pemilik', 'pemilik.idpemilik', '=', 'pet.idpemilik')
             ->join('ras_hewan', 'ras_hewan.idras_hewan', '=', 'pet.idras_hewan')
             ->select(
                 'pet.*',
                 'pemilik.nama as nama_pemilik',
+                'pemilik.no_wa as wa_pemilik',
+                'pemilik.alamat as alamat_pemilik',
                 'ras_hewan.nama_ras'
             )
             ->get()
-            ->map(function ($item) {
-                return (array) $item;
-            })
+            ->map(fn($item) => (array) $item)
             ->toArray();
 
-        // Ambil daftar dropdown
+        // Dropdown: Pemilik
         $listPemilik = DB::table('pemilik')
             ->select('idpemilik', 'nama')
             ->get()
-            ->map(fn($row) => (array) $row)
+            ->map(fn($item) => (array) $item)
             ->toArray();
 
+        // Dropdown: Ras
         $listRas = DB::table('ras_hewan')
             ->select('idras_hewan', 'nama_ras')
             ->get()
-            ->map(fn($row) => (array) $row)
+            ->map(fn($item) => (array) $item)
             ->toArray();
 
+        // Dropdown: Jenis
         $listJenis = DB::table('jenis_hewan')
             ->select('idjenis_hewan', 'nama_jenis_hewan')
             ->get()
-            ->map(fn($row) => (array) $row)
+            ->map(fn($item) => (array) $item)
             ->toArray();
 
         $editData = null;
 
-        return view('resepsionis.pet.datapet', compact('rows', 'listPemilik', 'listRas', 'listJenis', 'editData'));
+        return view(
+            'resepsionis.pet.datapet',
+            compact('rows', 'listPemilik', 'listRas', 'listJenis', 'editData')
+        );
     }
 
-    // ✅ TAMBAH DATA
+    // ===========================
+    //  SIMPAN DATA
+    // ===========================
     public function store(Request $request)
     {
         DB::table('pet')->insert([
@@ -64,7 +72,9 @@ class PetController extends Controller
         return redirect()->route('resepsionis.pet');
     }
 
-    // ✅ EDIT DATA
+    // ===========================
+    //  EDIT DATA
+    // ===========================
     public function edit($id)
     {
         $editData = (array) DB::table('pet')->where('idpet', $id)->first();
@@ -75,20 +85,24 @@ class PetController extends Controller
             ->select(
                 'pet.*',
                 'pemilik.nama as nama_pemilik',
+                'pemilik.no_wa as wa_pemilik',
+                'pemilik.alamat as alamat_pemilik',
                 'ras_hewan.nama_ras'
             )
             ->get()
-            ->map(fn($row) => (array) $row)
+            ->map(fn($item) => (array) $item)
             ->toArray();
 
-        $listPemilik = DB::table('pemilik')->select('idpemilik', 'nama')->get()->map(fn($r)=>(array)$r)->toArray();
-        $listRas = DB::table('ras_hewan')->select('idras_hewan', 'nama_ras')->get()->map(fn($r)=>(array)$r)->toArray();
-        $listJenis = DB::table('jenis_hewan')->select('idjenis_hewan', 'nama_jenis_hewan')->get()->map(fn($r)=>(array)$r)->toArray();
+        $listPemilik = DB::table('pemilik')->select('idpemilik', 'nama')->get()->map(fn($r) => (array)$r)->toArray();
+        $listRas = DB::table('ras_hewan')->select('idras_hewan', 'nama_ras')->get()->map(fn($r) => (array)$r)->toArray();
+        $listJenis = DB::table('jenis_hewan')->select('idjenis_hewan', 'nama_jenis_hewan')->get()->map(fn($r) => (array)$r)->toArray();
 
         return view('resepsionis.pet.datapet', compact('rows', 'editData', 'listPemilik', 'listRas', 'listJenis'));
     }
 
-    // ✅ UPDATE DATA
+    // ===========================
+    //  UPDATE DATA
+    // ===========================
     public function update(Request $request, $id)
     {
         DB::table('pet')->where('idpet', $id)->update([
@@ -103,7 +117,9 @@ class PetController extends Controller
         return redirect()->route('resepsionis.pet');
     }
 
-    // ✅ HAPUS DATA
+    // ===========================
+    //  HAPUS
+    // ===========================
     public function destroy($id)
     {
         DB::table('pet')->where('idpet', $id)->delete();

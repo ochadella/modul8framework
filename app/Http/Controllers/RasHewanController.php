@@ -28,6 +28,27 @@ class RasHewanController extends Controller
         ]);
     }
 
+    // ⭐⭐⭐ DITAMBAHKAN — buka form tambah ras ⭐⭐⭐
+    public function create()
+    {
+        // Ambil semua jenis hewan untuk dropdown
+        $listJenis = DB::table('jenis_hewan')->get();
+
+        // Ambil semua ras seperti biasa
+        $listRas = DB::table('ras_hewan')
+            ->join('jenis_hewan', 'ras_hewan.idjenis_hewan', '=', 'jenis_hewan.idjenis_hewan')
+            ->select('ras_hewan.idras_hewan', 'ras_hewan.nama_ras', 'jenis_hewan.nama_jenis_hewan')
+            ->orderBy('ras_hewan.idras_hewan', 'asc')
+            ->get();
+
+        // Tampilkan view tanpa editData
+        return view('dokter.ras.Datarashewan', [
+            'listRas'   => $listRas,
+            'listJenis' => $listJenis,
+            'editData'  => null,
+        ]);
+    }
+
     // ✅ Simpan data baru
     public function store(Request $request)
     {

@@ -4,41 +4,118 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User; // ✅ pastikan model User dipanggil dan namespace benar
+use App\Models\User;
+use App\Models\Role;
 
 class UserController extends Controller
 {
-    // Menampilkan daftar user
+
+    /* ============================ */
+    /*     INDEX (WAJIB ADA)       */
+    /* ============================ */
     public function index()
     {
+        // Ambil semua user
         $users = User::all();
-        return view('admin.user.datauser', compact('users'));
+
+        // Ambil semua role untuk dropdown tambah user
+        $roles = Role::all();
+
+        // Kembalikan ke view
+        return view('admin.user.datauser', compact('users', 'roles'));
     }
 
-    // Menampilkan form tambah user
-    public function create()
-    {
-        return view('admin.user.tambahuser');
-    }
 
-    // Menyimpan user baru
-    public function store(Request $request)
+    /* ============================ */
+    /*     TAMBAH USER             */
+    /* ============================ */
+    public function store(Request $req)
     {
-        // ✅ Validasi input — pastikan nama tabel sesuai (user / users)
-        $request->validate([
-            'nama' => 'required|string|max:100',
-            'email' => 'required|email|unique:user,email', // ubah ke 'user' jika tabel di DB kamu bernama 'user'
-            'password' => 'required|min:6',
+        $req->validate([
+            'nama' => 'required',
+            'email' => 'required|email|unique:user,email',
+            'password' => 'required|min:3',
+            'role' => 'required'
         ]);
 
-        // Simpan ke database
         User::create([
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'nama' => $req->nama,
+            'email' => $req->email,
+            'password' => Hash::make($req->password),
+            'role' => $req->role
         ]);
 
-        // Redirect balik ke Data User
-        return redirect()->route('admin.user.data')->with('success', 'User berhasil ditambahkan!');
+        return response()->json(['success' => true]);
+    }
+
+
+    /* ============================ */
+    /*     UPDATE USER             */
+    /* ============================ */
+    public function update(Request $req)
+    {
+        $req->validate([
+            'edit_id' => 'required',
+            'nama' => 'required',
+            'email' => 'required|email',
+            'role' => 'required'
+        ]);
+
+        $user = User::find($req->edit_id);
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User tidak ditemukan']);
+        }
+
+        // CEK EMAIL DUPLIKAT
+        $cekEmail = User::where('email', $req->email)
+                        ->where('iduser', '!=', $req->edit_id)
+                        ->first();
+
+        if ($cekEmail) {
+            return response()->json(['success' => false, 'message' => 'Email sudah digunakan']);
+        }
+
+        $user->update([
+            'nama' => $req->nama,
+            'email' => $req->email,
+            'role' => $req->role
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+
+    /* ============================ */
+    /*     RESET PASSWORD          */
+    /* ============================ */
+    public function resetPassword($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return back()->with('error', 'User tidak ditemukan');
+        }
+
+        $user->password = Hash::make("123456");
+        $user->save();
+
+        return back()->with('success', 'Password berhasil direset menjadi 123456');
+    }
+
+
+    /* ============================ */
+    /*     DELETE USER             */
+    /* ============================ */
+    public function delete($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return back()->with('error', 'User tidak ditemukan');
+        }
+
+        $user->delete();
+
+        return back()->with('success', 'User berhasil dihapus');
     }
 }

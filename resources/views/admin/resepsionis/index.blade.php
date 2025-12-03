@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Manajemen Role</title>
+    <title>Data Resepsionis</title>
 
     <!-- BOOTSTRAP ICONS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -217,7 +217,7 @@
 
         .sidebar-link:hover,
         .sidebar-link.active {
-            background: rgba(249,160,27,0.2);
+            background: rgba(249,160,27,0.16);
             color: #ffffff;
         }
 
@@ -279,15 +279,24 @@
         }
 
         /* ================= BUTTONS ================= */
+        .btn-add {
+            padding: 12px 20px;
+            background: linear-gradient(90deg, #f9a01b, #ffba4c);
+            color: #102f76;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(249,160,27,0.35);
+        }
+
         .btn-back {
-            margin-bottom: 20px;
+            margin-left: 10px;
             padding: 10px 18px;
             background: #6c757d;
             color: white;
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
-            display: inline-block;
         }
 
         /* ================= TABLE ================= */
@@ -305,104 +314,60 @@
             color: #f9a01b;
             padding: 15px;
             font-size: 16px;
-            text-align: center;
+            text-align: center !important;
         }
 
         td {
             padding: 14px;
             background: rgba(255,255,255,0.82);
             border-bottom: 1px solid rgba(0,0,0,0.05);
-            text-align: center;
-            vertical-align: middle;
+            text-align: center !important;
+            vertical-align: middle !important;
         }
 
         tr:hover td {
             background: rgba(249,160,27,0.13);
         }
 
-        /* ================= ROLE BADGES ================= */
-        .badge-role {
-            background: linear-gradient(to right, #004AAD, #00B4D8);
-            padding: 6px 12px;
-            border-radius: 20px;
-            color: #ffffff;
+        /* ================= STATUS BADGE ================= */
+        .status-badge {
+            padding: 6px 14px;
             font-size: 13px;
             font-weight: 600;
+            border-radius: 20px;
             display: inline-block;
-            margin: 2px;
         }
 
-        .role-wrapper {
+        .active-badge {
+            background: #c3f7c3;
+            color: #1d7a1d;
+            border: 1px solid #8be88b;
+        }
+
+        .inactive-badge {
+            background: #ffd3d3;
+            color: #b71818;
+            border: 1px solid #ff9a9a;
+        }
+
+        /* ================= ACTION ICONS ================= */
+        .action-icons {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        /* ================= ACTION CONTROLS ================= */
-        .action-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            gap: 16px;
             align-items: center;
         }
 
-        .control-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        select {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            background: white;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        select:focus {
-            outline: none;
-            border-color: #f9a01b;
-        }
-
-        .btn-save {
-            background: linear-gradient(90deg, #f9a01b, #ffba4c);
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 700;
+        .icon-btn {
+            font-size: 22px;
             color: #102f76;
             cursor: pointer;
-            font-size: 13px;
-            box-shadow: 0 2px 8px rgba(249,160,27,0.3);
-            transition: 0.2s;
+            text-decoration: none;
         }
 
-        .btn-save:hover {
+        .icon-btn:hover {
+            color: #f9a01b;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(249,160,27,0.4);
-        }
-
-        .btn-delete {
-            background: #dc3545;
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-            font-size: 13px;
-            box-shadow: 0 2px 8px rgba(220,53,69,0.3);
-            transition: 0.2s;
-        }
-
-        .btn-delete:hover {
-            background: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(220,53,69,0.4);
         }
 
         /* ================= RESPONSIVE ================= */
@@ -429,7 +394,7 @@
     $user = auth()->user();
     $displayName = $user->nama ?? $user->name ?? 'User';
     $displayRole = ucfirst($user->role ?? 'Admin');
-    $initial = strtoupper(mb_substr($displayName, 0, 1));
+    $initial     = strtoupper(mb_substr($displayName, 0, 1));
 @endphp
 
 <!-- TOP NAVBAR -->
@@ -445,7 +410,7 @@
     <div class="nav-center">
         <div class="nav-search">
             <i class="bi bi-search"></i>
-            <input type="text" placeholder="Cari menu atau data role...">
+            <input type="text" placeholder="Cari menu atau data resepsionis...">
         </div>
     </div>
 
@@ -488,10 +453,10 @@
             <a href="{{ route('admin.perawat.index') }}" class="sidebar-link">
                 <i class="bi bi-clipboard2-pulse"></i><span>Data Perawat</span>
             </a>
-            <a href="{{ route('admin.resepsionis.index') }}" class="sidebar-link">
+            <a href="{{ route('admin.resepsionis.index') }}" class="sidebar-link active">
                 <i class="bi bi-headset"></i><span>Data Resepsionis</span>
             </a>
-            <a href="{{ route('admin.role.manajemen') }}" class="sidebar-link active">
+            <a href="{{ route('admin.role.manajemen') }}" class="sidebar-link">
                 <i class="bi bi-shield-lock-fill"></i><span>Manajemen Role</span>
             </a>
 
@@ -525,83 +490,73 @@
 
         <!-- HEADER TENGAH -->
         <div class="page-header">
-            <i class="bi bi-shield-lock-fill page-header-icon"></i>
-            <h1>Manajemen Role</h1>
-            <p>Atur role & status semua pengguna dalam sistem.</p>
+            <i class="bi bi-headset page-header-icon"></i>
+            <h1>Data Resepsionis</h1>
+            <p>Daftar resepsionis yang terdaftar dalam sistem.</p>
         </div>
 
         <!-- KONTEN UTAMA -->
         <div class="container">
 
+            <a href="{{ route('admin.resepsionis.create') }}" class="btn-add">+ Tambah Resepsionis</a>
             <a href="{{ route('admin.datamaster') }}" class="btn-back">← Kembali</a>
 
             <table>
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>ID User</th>
                         <th>Nama</th>
                         <th>Email</th>
-                        <th>Role & Status</th>
+                        <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     @php $no = 1; @endphp
-                    @foreach($userRoles['data'] as $row)
+                    @foreach($resepsionis as $r)
                         <tr>
                             <td>{{ $no++ }}</td>
-                            <td>{{ $row['iduser'] }}</td>
-                            <td>{{ $row['nama'] }}</td>
-                            <td>{{ $row['email'] }}</td>
+                            <td>{{ $r->nama }}</td>
+                            <td>{{ $r->email }}</td>
 
+                            <!-- STATUS BADGE -->
                             <td>
-                                <div class="role-wrapper">
-                                    @foreach(explode(',', $row['role']) as $r)
-                                        @if(trim($r) !== "")
-                                            <span class="badge-role">{{ trim($r) }}</span>
-                                        @endif
-                                    @endforeach
-                                </div>
-
-                                <form method="POST" action="{{ route('admin.role.store') }}" class="action-controls">
-                                    @csrf
-                                    <input type="hidden" name="iduser" value="{{ $row['iduser'] }}">
-                                    
-                                    <div class="control-row">
-                                        <select name="idrole" required>
-                                            <option value="">Pilih Role</option>
-                                            @foreach($role as $r)
-                                                <option value="{{ $r['idrole'] }}">{{ $r['nama_role'] }}</option>
-                                            @endforeach
-                                        </select>
-
-                                        <select name="status" required>
-                                            <option value="1">Aktif</option>
-                                            <option value="0">Nonaktif</option>
-                                        </select>
-                                    </div>
-
-                                    <button type="submit" class="btn-save">
-                                        <i class="bi bi-check-circle"></i> Simpan Role
-                                    </button>
-                                </form>
+                                @if($r->status === 'aktif')
+                                    <span class="status-badge active-badge">Active</span>
+                                @else
+                                    <span class="status-badge inactive-badge">Inactive</span>
+                                @endif
                             </td>
 
+                            <!-- ACTION ICONS -->
                             <td>
-                                <form method="POST" action="{{ route('admin.role.deleteAll', $row['iduser']) }}" 
-                                      onsubmit="return confirm('Hapus seluruh role user ini?')" style="margin:0;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-delete">
-                                        <i class="bi bi-trash"></i> Hapus
-                                    </button>
-                                </form>
+                                <div class="action-icons">
+                                    <!-- EDIT -->
+                                    <a class="icon-btn"
+                                       href="{{ route('admin.resepsionis.edit', ['id' => $r->iduser]) }}">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <!-- RESET PASSWORD -->
+                                    <a class="icon-btn"
+                                       href="{{ route('admin.resepsionis.reset', ['id' => $r->iduser]) }}"
+                                       onclick="return confirm('Reset password resepsionis ini?')">
+                                        <i class="bi bi-key-fill"></i>
+                                    </a>
+
+                                    <!-- DELETE -->
+                                    <a class="icon-btn"
+                                       href="{{ route('admin.resepsionis.delete', ['id' => $r->iduser]) }}"
+                                       onclick="return confirm('Hapus resepsionis ini?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
+
             </table>
 
         </div><!-- /container -->

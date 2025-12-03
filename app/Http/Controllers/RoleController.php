@@ -2,71 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    /**
-     * Tampilkan halaman Manajemen Role
-     */
     public function index()
     {
-        // Ambil semua user beserta relasi role-nya
+        // Ambil semua user dengan role-nya
         $users = User::with('roles')->get();
+        $role = Role::all();
 
-        // Ambil semua role untuk dropdown
-        $roles = Role::all();
-
-        // Format data biar cocok sama struktur di manajemenrole.blade.php
         $userRoles = ['data' => []];
+
         foreach ($users as $user) {
             $userRoles['data'][] = [
                 'iduser' => $user->iduser,
-                'nama' => $user->nama,
-                'email' => $user->email,
-                'roles' => $user->roles->pluck('nama_role')->implode(', ')
+                'nama'   => $user->nama,
+                'email'  => $user->email,
+                'role'   => $user->roles->pluck('nama_role')->implode(', ')
             ];
         }
 
-        // Kirim data ke view
-        return view('admin.role.manajemenrole', compact('userRoles', 'roles'))
-                ->with('roleOptions', $roles);
+        return view('admin.role.manajemenrole', compact('userRoles', 'role'));
     }
 
-    /**
-     * Simpan perubahan role user
-     */
     public function store(Request $request)
     {
-        $iduser = $request->input('iduser');
-        $idrole = $request->input('idrole');
-        $status = $request->input('status', 1);
+        $iduser = $request->iduser;
+        $idrole = $request->idrole;
 
-        if ($iduser && $idrole) {
-            $user = User::find($iduser);
-            if ($user) {
-                // attach atau update role di pivot
-                $user->roles()->syncWithoutDetaching([
-                    $idrole => ['status' => $status]
-                ]);
-            }
-        }
+        $user = User::findOrFail($iduser);
 
-        return redirect()->back()->with('success', 'Role user berhasil disimpan!');
+        // Tambahkan role (tanpa hapus role sebelumnya)
+        $user->roles()->syncWithoutDetaching([$idrole]);
+
+        return back()->with('success', 'Role berhasil ditambahkan!');
     }
 
-    /**
-     * Hapus semua role milik user
-     */
     public function destroy($iduser)
     {
-        $user = User::find($iduser);
-        if ($user) {
-            $user->roles()->detach();
-        }
+        $user = User::findOrFail($iduser);
+        $user->roles()->detach();
 
-        return redirect()->back()->with('success', 'Semua role user berhasil dihapus!');
+        return back()->with('success', 'Semua role user berhasil dihapus!');
+    }
+
+    /* ⭐⭐⭐ DITAMBAHKAN TANPA MENGGANGGU CODE LAIN ⭐⭐⭐ */
+    public function deleteAll($iduser)
+    {
+        $user = User::findOrFail($iduser);
+
+        // hapus semua role user ini
+        $user->roles()->detach();
+
+        return back()->with('success', 'Seluruh role user berhasil dihapus!');
     }
 }

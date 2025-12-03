@@ -10,11 +10,13 @@ class PemilikController extends Controller
     // ✅ Tampilkan semua data pemilik
     public function index()
     {
-        $rows = DB::table('pemilik')->get();
+        // DATA UTAMA UNTUK TABEL
+        $pemilik = DB::table('pemilik')->get();
 
         return view('resepsionis.pemilik.datapemilik', [
-            'rows' => $rows,
-            'editData' => null // ✅ tambahkan ini biar gak undefined
+            'pemilik'   => $pemilik,
+            'rows'      => $pemilik,   // ← mempertahankan variabel lama
+            'editData'  => null        // ← biar tidak undefined
         ]);
     }
 
@@ -23,27 +25,29 @@ class PemilikController extends Controller
     {
         $request->validate([
             'nama_pemilik' => 'required|string|max:100',
-            'no_telp' => 'required|string|max:20',
-            'alamat' => 'required|string|max:255',
+            'no_telp'      => 'required|string|max:20',
+            'alamat'       => 'required|string|max:255',
         ]);
 
         DB::table('pemilik')->insert([
-            'nama_pemilik' => $request->nama_pemilik,
-            'no_wa' => $request->no_telp,
+            'nama'   => $request->nama_pemilik,
+            'no_wa'  => $request->no_telp,
             'alamat' => $request->alamat,
         ]);
 
-        return redirect()->route('resepsionis.pemilik')->with('success', 'Data pemilik berhasil ditambahkan');
+        return redirect()->route('resepsionis.pemilik')
+            ->with('success', 'Data pemilik berhasil ditambahkan');
     }
 
     // ✅ Edit data pemilik
     public function edit($id)
     {
         $editData = DB::table('pemilik')->where('idpemilik', $id)->first();
-        $rows = DB::table('pemilik')->get();
+        $pemilik  = DB::table('pemilik')->get();
 
         return view('resepsionis.pemilik.datapemilik', [
-            'rows' => $rows,
+            'pemilik'  => $pemilik,
+            'rows'     => $pemilik,   // tetap dipertahankan
             'editData' => $editData
         ]);
     }
@@ -53,23 +57,28 @@ class PemilikController extends Controller
     {
         $request->validate([
             'nama_pemilik' => 'required|string|max:100',
-            'no_telp' => 'required|string|max:20',
-            'alamat' => 'required|string|max:255',
+            'no_telp'      => 'required|string|max:20',
+            'alamat'       => 'required|string|max:255',
         ]);
 
-        DB::table('pemilik')->where('idpemilik', $id)->update([
-            'nama_pemilik' => $request->nama_pemilik,
-            'no_wa' => $request->no_telp,
-            'alamat' => $request->alamat,
-        ]);
+        DB::table('pemilik')
+            ->where('idpemilik', $id)
+            ->update([
+                'nama'   => $request->nama_pemilik,
+                'no_wa'  => $request->no_telp,
+                'alamat' => $request->alamat,
+            ]);
 
-        return redirect()->route('resepsionis.pemilik')->with('success', 'Data pemilik berhasil diperbarui');
+        return redirect()->route('resepsionis.pemilik')
+            ->with('success', 'Data pemilik berhasil diperbarui');
     }
 
     // ✅ Hapus data
     public function destroy($id)
     {
         DB::table('pemilik')->where('idpemilik', $id)->delete();
-        return redirect()->route('resepsionis.pemilik')->with('success', 'Data pemilik berhasil dihapus');
+
+        return redirect()->route('resepsionis.pemilik')
+            ->with('success', 'Data pemilik berhasil dihapus');
     }
 }

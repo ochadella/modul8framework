@@ -60,7 +60,7 @@ class Role {
                 u.iduser, 
                 u.nama, 
                 u.email,
-                GROUP_CONCAT(DISTINCT r.nama_role SEPARATOR ', ') AS roles,
+                GROUP_CONCAT(DISTINCT r.nama_role SEPARATOR ', ') AS role,
                 MAX(ru.status) AS status
             FROM user u
             LEFT JOIN role_user ru ON u.iduser = ru.iduser
@@ -85,14 +85,14 @@ class Role {
     public function getRoleOptions() {
         $sql = "SELECT idrole, nama_role FROM role ORDER BY idrole ASC";
         $result = $this->db->query($sql);
-        $roles = [];
+        $role = [];
 
         if ($result && $result->num_rows > 0) {
             while ($r = $result->fetch_assoc()) {
-                $roles[] = $r;
+                $role[] = $r;
             }
         }
-        return ['data' => $roles];
+        return ['data' => $role];
     }
 
     // Tambahkan atau update role user di tabel role_user

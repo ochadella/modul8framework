@@ -1,79 +1,573 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Data Kategori</title>
-<style>
-body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;}
-.navbar{background:#102f76;padding:15px 25px;color:#fff;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.3);}
-.navbar span{font-size:18px;font-weight:bold;color:#f9a01b;}
-.navbar a{color:#fff;text-decoration:none;margin-left:20px;font-weight:bold;transition:0.3s;}
-.navbar a:hover{color:#f9a01b;}
-.content{padding:30px;}
-h2{margin-bottom:20px;color:#102f76;}
-.btn{display:inline-block;padding:8px 14px;margin:4px;border-radius:6px;font-size:14px;font-weight:bold;text-decoration:none;color:white;transition:0.3s;border:none;cursor:pointer;}
-.btn-back{background:#6c757d;}
-.btn-add{background:linear-gradient(to right,#f9a01b,#ff9554);}
-.btn-edit{background:#ffc107;color:black;}
-.btn-delete{background:#dc3545;}
-.btn:hover{opacity:0.9;}
-.form-card,.table-container{background:#fff;border-radius:12px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,0.15);margin-bottom:20px;}
-input{width:100%;padding:8px;margin:8px 0;border:1px solid #ccc;border-radius:6px;}
-table{border-collapse:collapse;width:100%;min-width:500px;}
-th{background:#102f76;color:#f9a01b;padding:12px;text-align:left;}
-td{padding:10px;border-bottom:1px solid #ddd;}
-tr:hover td{background:rgba(249,160,27,0.08);}
-.actions{white-space:nowrap;}
-</style>
+    <meta charset="UTF-8">
+    <title>Data Kategori</title>
+
+    <!-- BOOTSTRAP ICONS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        /* =====================================================
+           🌟 BACKGROUND GRADIENT ELEGANT ORANGE SOFT
+        ====================================================== */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(
+                180deg,
+                #ffffff 0%,
+                #fff7ef 20%,
+                #ffe6bf 50%,
+                #ffcf86 80%,
+                #ffb74a 100%
+            );
+            background-attachment: fixed;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(
+                circle at bottom,
+                rgba(255,170,40,0.22),
+                transparent 60%
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ================= NAVBAR (TOP) ================= */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: linear-gradient(135deg, #102f76 0%, #142a46 100%);
+            color: #ffffff;
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            font-size: 30px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .brand-text-title {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .brand-text-sub {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .nav-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 40px;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border-radius: 999px;
+            padding: 6px 14px;
+            min-width: 280px;
+            max-width: 420px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-search i {
+            color: #102f76;
+            font-size: 16px;
+        }
+
+        .nav-search input {
+            border: none;
+            outline: none;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #f9a01b;
+            color: #102f76;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.35);
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        .btn-logout {
+            padding: 7px 14px;
+            border-radius: 999px;
+            border: none;
+            background: #f5594b;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(245,89,75,0.5);
+        }
+
+        .btn-logout:hover {
+            filter: brightness(1.05);
+        }
+
+        /* ================= LAYOUT: SIDEBAR + MAIN ================= */
+        .layout {
+            max-width: 1400px;
+            margin: 24px auto 40px;
+            display: flex;
+            gap: 22px;
+        }
+
+        /* ---------- SIDEBAR ---------- */
+        .sidebar {
+            width: 230px;
+            background: linear-gradient(180deg, #102f76 0%, #142a46 100%);
+            border-radius: 18px;
+            padding: 20px 16px 24px;
+            color: #ffffff;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+        }
+
+        .sidebar-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            padding: 4px 6px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .sidebar-title i {
+            font-size: 18px;
+            padding: 6px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 6px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            color: #e6efff;
+            font-size: 13px;
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+
+        .sidebar-link i {
+            font-size: 16px;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: rgba(249,160,27,0.2);
+            color: #ffffff;
+        }
+
+        .sidebar-section {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.6;
+            margin: 10px 4px 4px;
+        }
+
+        /* ---------- MAIN AREA ---------- */
+        .main-area {
+            flex: 1;
+        }
+
+        /* ================= CENTERED PAGE HEADER ================= */
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .page-header-icon {
+            font-size: 54px;
+            color: #102f76;
+            background: #f9a01b33;
+            padding: 20px;
+            border-radius: 50%;
+        }
+
+        .page-header h1 {
+            margin-top: 18px;
+            font-size: 34px;
+            color: #102f76;
+            font-weight: 800;
+        }
+
+        .page-header p {
+            margin-top: -6px;
+            font-size: 15px;
+            color: #3c3c3c;
+        }
+
+        /* ================= CONTAINER CARD ================= */
+        .container {
+            margin: 0 auto;
+            max-width: 100%;
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 32px 36px 40px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+            animation: fadeIn 0.45s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= BUTTONS ================= */
+        .btn-add {
+            padding: 12px 20px;
+            background: linear-gradient(90deg, #f9a01b, #ffba4c);
+            color: #102f76;
+            text-decoration: none;
+            font-weight: 700;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(249,160,27,0.35);
+        }
+
+        .btn-back {
+            margin-left: 10px;
+            padding: 10px 18px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        /* ================= TABLE ================= */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 28px;
+            overflow: hidden;
+            border-radius: 14px;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.10);
+        }
+
+        th {
+            background: linear-gradient(135deg, #102f76 0%, #142a46 100%);
+            color: #f9a01b;
+            padding: 15px;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        td {
+            padding: 14px;
+            background: rgba(255,255,255,0.82);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: rgba(249,160,27,0.13);
+        }
+
+        /* ================= ACTION ICONS ================= */
+        .action-icons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            font-size: 22px;
+            color: #102f76;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            color: #f9a01b;
+            transform: translateY(-2px);
+        }
+
+        /* ================= MODAL ================= */
+        #modalTambah {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-box {
+            width: 420px;
+            background: white;
+            padding: 26px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1100px) {
+            .layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                display: flex;
+                overflow-x: auto;
+            }
+            .sidebar-menu {
+                flex-direction: row;
+                flex-wrap: nowrap;
+            }
+        }
+    </style>
 </head>
+
 <body>
+
+@php
+    $user = auth()->user();
+    $displayName = $user->nama ?? $user->name ?? 'User';
+    $displayRole = ucfirst($user->role ?? 'Admin');
+    $initial = strtoupper(mb_substr($displayName, 0, 1));
+@endphp
+
+<!-- TOP NAVBAR -->
 <div class="navbar">
-    <span>📂 Kategori</span>
-    <span>
-        <a href="{{ route('interface.dashboard') }}">Dashboard</a>
-        <a href="{{ route('admin.datamaster') }}">Data Master</a>
-        <a href="{{ route('logout') }}">Logout</a>
-    </span>
+    <div class="nav-left">
+        <i class="bi bi-hospital nav-logo"></i>
+        <div>
+            <div class="brand-text-title">Klinik Hewan</div>
+            <div class="brand-text-sub">Panel Administrator</div>
+        </div>
+    </div>
+
+    <div class="nav-center">
+        <div class="nav-search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Cari menu atau data kategori...">
+        </div>
+    </div>
+
+    <div class="nav-right">
+        <div class="user-info">
+            <div class="user-avatar">{{ $initial }}</div>
+            <div>
+                <div class="user-name">{{ $displayName }}</div>
+                <div class="user-role">{{ $displayRole }}</div>
+            </div>
+        </div>
+        <a href="{{ route('logout') }}" class="btn-logout">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+    </div>
 </div>
 
-<div class="content">
-    <h2>Data Kategori</h2>
-    <div class="form-card">
-        <form method="post" action="">
-            @csrf
-            <input type="hidden" name="idkategori" value="{{ $editData['idkategori'] ?? '' }}">
-            <label>Nama Kategori:</label>
-            <input type="text" name="nama_kategori" value="{{ $editData['nama_kategori'] ?? '' }}" required>
+<div class="layout">
 
-            @if (!empty($editData))
-                <button type="submit" name="update" class="btn btn-edit">Update</button>
-                <a href="{{ route('admin.kategori.data') }}" class="btn btn-delete">Batal</a>
-            @else
-                <button type="submit" name="tambah" class="btn btn-add">Tambah</button>
-                <a href="{{ route('admin.datamaster') }}" class="btn btn-back">← Kembali</a>
-            @endif
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-title">
+            <i class="bi bi-grid-fill"></i>
+            <span>Data Master</span>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="sidebar-section">Dashboard</div>
+            <a href="{{ route('interface.dashboard') }}" class="sidebar-link">
+                <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+            </a>
+
+            <div class="sidebar-section">User & Staff</div>
+            <a href="{{ route('admin.user.data') }}" class="sidebar-link">
+                <i class="bi bi-people-fill"></i><span>Data User</span>
+            </a>
+            <a href="{{ route('admin.dokter.index') }}" class="sidebar-link">
+                <i class="bi bi-stethoscope"></i><span>Data Dokter</span>
+            </a>
+            <a href="{{ route('admin.perawat.index') }}" class="sidebar-link">
+                <i class="bi bi-clipboard2-pulse"></i><span>Data Perawat</span>
+            </a>
+            <a href="{{ route('admin.resepsionis.index') }}" class="sidebar-link">
+                <i class="bi bi-headset"></i><span>Data Resepsionis</span>
+            </a>
+            <a href="{{ route('admin.role.manajemen') }}" class="sidebar-link">
+                <i class="bi bi-shield-lock-fill"></i><span>Manajemen Role</span>
+            </a>
+
+            <div class="sidebar-section">Master Data</div>
+            <a href="{{ route('dokter.jenis.data') }}" class="sidebar-link">
+                <i class="bi bi-ui-checks-grid"></i><span>Jenis Hewan</span>
+            </a>
+            <a href="{{ route('dokter.ras.data') }}" class="sidebar-link">
+                <i class="bi bi-diagram-3-fill"></i><span>Ras Hewan</span>
+            </a>
+            <a href="{{ route('resepsionis.pemilik') }}" class="sidebar-link">
+                <i class="bi bi-person-vcard-fill"></i><span>Data Pemilik</span>
+            </a>
+            <a href="{{ route('resepsionis.pet') }}" class="sidebar-link">
+                <i class="bi bi-bag-heart-fill"></i><span>Data Pet</span>
+            </a>
+            <a href="{{ route('admin.kategori.data') }}" class="sidebar-link active">
+                <i class="bi bi-tags-fill"></i><span>Kategori</span>
+            </a>
+            <a href="{{ route('admin.kategoriklinis.data') }}" class="sidebar-link">
+                <i class="bi bi-card-checklist"></i><span>Kategori Klinis</span>
+            </a>
+            <a href="{{ route('admin.kodetindakan.data') }}" class="sidebar-link">
+                <i class="bi bi-code-square"></i><span>Kode Tindakan</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <div class="main-area">
+
+        <!-- HEADER TENGAH -->
+        <div class="page-header">
+            <i class="bi bi-tags page-header-icon"></i>
+            <h1>Data Kategori</h1>
+            <p>Kelola data kategori produk atau layanan klinik.</p>
+        </div>
+
+        <!-- KONTEN UTAMA -->
+        <div class="container">
+
+            <a href="#" class="btn-add" onclick="document.getElementById('modalTambah').style.display='flex'">+ Tambah Kategori</a>
+            <a href="{{ route('admin.datamaster') }}" class="btn-back">← Kembali</a>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama Kategori</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($rows as $r)
+                        <tr>
+                            <td>{{ $r['idkategori'] }}</td>
+                            <td>{{ $r['nama_kategori'] }}</td>
+
+                            <td>
+                                <div class="action-icons">
+                                    <a href="{{ route('admin.kategori.edit', $r['idkategori']) }}" class="icon-btn">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <a href="{{ route('admin.kategori.delete', $r['idkategori']) }}"
+                                       onclick="return confirm('Yakin hapus kategori ini?')" class="icon-btn">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3">Belum ada data</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+        </div><!-- /container -->
+    </div><!-- /main-area -->
+
+</div><!-- /layout -->
+
+<!-- ==================== MODAL ==================== -->
+<div id="modalTambah">
+    <div class="modal-box">
+
+        <h2 style="text-align:center;color:#102f76;margin-top:0">Tambah Kategori</h2>
+
+        <form method="POST" action="{{ route('admin.kategori.store') }}">
+            @csrf
+
+            <label style="font-weight:600;color:#102f76;">Nama Kategori:</label>
+            <input type="text" name="nama_kategori" required
+                   style="width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;margin-top:6px;">
+
+            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">
+                <button type="button"
+                        onclick="document.getElementById('modalTambah').style.display='none'"
+                        style="padding:10px 16px;background:#6c757d;border:none;color:#fff;border-radius:8px;">
+                    Batal
+                </button>
+
+                <button type="submit"
+                        style="padding:10px 16px;background:#f9a01b;border:none;color:#102f76;font-weight:700;border-radius:8px;">
+                    Simpan
+                </button>
+            </div>
         </form>
     </div>
-
-    <div class="table-container">
-        <table>
-            <tr><th>ID</th><th>Nama Kategori</th><th>Aksi</th></tr>
-            @if (!empty($rows) && count($rows) > 0)
-                @foreach($rows as $r)
-                    <tr>
-                        <td>{{ $r['idkategori'] }}</td>
-                        <td>{{ $r['nama_kategori'] }}</td>
-                        <td class="actions">
-                            <a href="{{ route('admin.kategori.data') }}?edit={{ $r['idkategori'] }}" class="btn btn-edit">✏ Edit</a>
-                            <a href="{{ route('admin.kategori.data') }}?delete={{ $r['idkategori'] }}" class="btn btn-delete" onclick="return confirm('Hapus data ini?')">🗑 Hapus</a>
-                        </td>
-                    </tr>
-                @endforeach
-            @else
-                <tr><td colspan="3" style="text-align:center;color:#666;">Belum ada data</td></tr>
-            @endif
-        </table>
-    </div>
 </div>
+
 </body>
 </html>

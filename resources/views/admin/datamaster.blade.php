@@ -9,14 +9,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* ================= GLOBAL ================= */
-        * {
-            box-sizing: border-box;
-        }
-
+        /* =====================================================
+           🌟 BACKGROUND GRADIENT ELEGANT ORANGE SOFT
+        ====================================================== */
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(
                 180deg,
                 #ffffff 0%,
@@ -26,7 +24,6 @@
                 #ffb74a 100%
             );
             background-attachment: fixed;
-            color: #102f76;
         }
 
         body::before {
@@ -35,149 +32,143 @@
             inset: 0;
             background: radial-gradient(
                 circle at bottom,
-                rgba(255,170,40,0.25),
+                rgba(255,170,40,0.22),
                 transparent 60%
             );
             pointer-events: none;
             z-index: -1;
         }
 
-        a {
-            text-decoration: none;
-        }
-
-        /* ================= TOPBAR ================= */
-        .topbar {
-            height: 70px;
+        /* ================= NAVBAR (TOP) ================= */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
             background: linear-gradient(135deg, #102f76 0%, #142a46 100%);
+            color: #ffffff;
+            padding: 14px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 32px;
-            color: #fff;
             box-shadow: 0 4px 18px rgba(0,0,0,0.25);
         }
 
-        .topbar-left {
+        .nav-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .topbar-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 16px;
-            background: rgba(249,160,27,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
+        .nav-logo {
+            font-size: 30px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
         }
 
-        .topbar-title {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-
-        .topbar-title span:first-child {
+        .brand-text-title {
             font-weight: 700;
-            letter-spacing: .5px;
-        }
-
-        .topbar-title span:last-child {
-            font-size: 12px;
-            opacity: .8;
-        }
-
-        .topbar-search {
-            flex: 0 0 420px;
-            max-width: 420px;
-        }
-
-        .topbar-search input {
-            width: 100%;
-            border-radius: 999px;
-            border: none;
-            padding: 10px 18px 10px 38px;
-            outline: none;
-            font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-            background: #fefefe;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23102f76' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: 12px center;
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .topbar-right .notif {
             font-size: 18px;
-            cursor: pointer;
         }
 
-        .topbar-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(10,10,25,0.35);
-            padding: 5px 12px;
-            border-radius: 999px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+        .brand-text-sub {
+            font-size: 12px;
+            opacity: 0.8;
         }
 
-        .topbar-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 999px;
-            background: #f9a01b;
+        .nav-center {
+            flex: 1;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-weight: 700;
+            padding: 0 40px;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border-radius: 999px;
+            padding: 6px 14px;
+            min-width: 280px;
+            max-width: 420px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-search i {
             color: #102f76;
             font-size: 16px;
         }
 
-        .topbar-user {
-            display: flex;
-            flex-direction: column;
-            font-size: 12px;
+        .nav-search input {
+            border: none;
+            outline: none;
+            font-size: 13px;
+            width: 100%;
         }
 
-        .topbar-user span:first-child {
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #f9a01b;
+            color: #102f76;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.35);
+        }
+
+        .user-name {
+            font-size: 13px;
             font-weight: 600;
         }
 
-        .topbar-user span:last-child {
-            opacity: .8;
+        .user-role {
+            font-size: 11px;
+            opacity: 0.8;
         }
 
-        .topbar-logout {
-            margin-left: 6px;
-            background: #ff4d4d;
+        .btn-logout {
+            padding: 7px 14px;
             border-radius: 999px;
-            padding: 6px 12px;
+            border: none;
+            background: #f5594b;
+            color: #ffffff;
             font-size: 12px;
             font-weight: 600;
-            color: #fff;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(245,89,75,0.5);
         }
 
-        /* ================= LAYOUT WRAPPER ================= */
-        .main-wrapper {
+        .btn-logout:hover {
+            filter: brightness(1.05);
+        }
+
+        /* ================= LAYOUT: SIDEBAR + MAIN ================= */
+        .layout {
+            max-width: 1420px;
+            margin: 24px auto 40px;
             display: flex;
-            gap: 26px;
-            padding: 24px 26px 40px;
+            gap: 22px;
         }
 
-        /* ================= SIDEBAR (SAMA DGN DATA RESEPSIONIS) ================= */
+        /* ---------- SIDEBAR (SAMA PERSIS SEPERTI DATA USER) ---------- */
         .sidebar {
-            width: 260px;
+            width: 215px;
             border-radius: 24px;
             background: linear-gradient(180deg, #102f76 0%, #142a46 100%);
             color: #fff;
@@ -193,6 +184,14 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 8px;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 12px;
+            transition: 0.25s ease;
+        }
+
+        .sidebar-header:hover {
+            background: rgba(255,255,255,0.08);
         }
 
         .sidebar-header-icon {
@@ -249,6 +248,7 @@
             color: #e9f1ff;
             font-size: 14px;
             transition: 0.25s ease;
+            text-decoration: none;
         }
 
         .sidebar-link i {
@@ -273,19 +273,29 @@
             padding-top: 8px;
         }
 
+        /* ---------- MAIN AREA ---------- */
+        .main-area {
+            flex: 1;
+        }
+
         /* ================= CONTENT ================= */
         .content {
-            flex: 1;
-            background: rgba(255,255,255,0.82);
-            border-radius: 26px;
-            box-shadow: 0 18px 36px rgba(0,0,0,0.18);
-            padding: 30px 32px 40px;
-            backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 32px 36px 40px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+            animation: fadeIn 0.45s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         .page-header {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .page-header h2 {
@@ -458,26 +468,22 @@
             color: #102f76;
         }
 
-        @media (max-width: 960px) {
-            .main-wrapper {
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1100px) {
+            .layout {
                 flex-direction: column;
             }
             .sidebar {
                 width: 100%;
                 flex-direction: row;
                 overflow-x: auto;
-                padding: 16px;
-            }
-            .sidebar-section-title,
-            .sidebar-bottom {
-                display: none;
             }
             .sidebar-menu {
                 flex-direction: row;
                 flex-wrap: nowrap;
             }
-            .sidebar-link {
-                white-space: nowrap;
+            .sidebar-section-title {
+                display: none;
             }
         }
 
@@ -505,42 +511,49 @@
 </head>
 <body>
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-        <div class="topbar-left">
-            <div class="topbar-logo">
-                <i class="bi bi-hospital"></i>
-            </div>
-            <div class="topbar-title">
-                <span>Klinik Hewan</span>
-                <span>Panel Administrator</span>
-            </div>
-        </div>
+@php
+    $user = auth()->user();
+    $displayName = $user->nama ?? $user->name ?? 'User';
+    $displayRole = ucfirst($user->role ?? 'Admin');
+    $initial = strtoupper(mb_substr($displayName, 0, 1));
+@endphp
 
-        <div class="topbar-search">
-            <input type="text" placeholder="Cari menu atau data...">
-        </div>
-
-        <div class="topbar-right">
-            <span class="notif"><i class="bi bi-bell-fill"></i></span>
-            <div class="topbar-profile">
-                <div class="topbar-avatar">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'U',0,1)) }}
-                </div>
-                <div class="topbar-user">
-                    <span>{{ auth()->user()->name ?? 'User' }}</span>
-                    <span>{{ ucfirst(auth()->user()->role ?? 'admin') }}</span>
-                </div>
-                <a href="{{ route('logout') }}" class="topbar-logout">Logout</a>
-            </div>
+<!-- TOP NAVBAR -->
+<div class="navbar">
+    <div class="nav-left">
+        <i class="bi bi-hospital nav-logo"></i>
+        <div>
+            <div class="brand-text-title">Klinik Hewan</div>
+            <div class="brand-text-sub">Panel Administrator</div>
         </div>
     </div>
 
-    <!-- MAIN LAYOUT -->
-    <div class="main-wrapper">
+    <div class="nav-center">
+        <div class="nav-search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Cari menu atau data...">
+        </div>
+    </div>
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
+    <div class="nav-right">
+        <div class="user-info">
+            <div class="user-avatar">{{ $initial }}</div>
+            <div>
+                <div class="user-name">{{ $displayName }}</div>
+                <div class="user-role">{{ $displayRole }}</div>
+            </div>
+        </div>
+        <a href="{{ route('logout') }}" class="btn-logout">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+    </div>
+</div>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <a href="{{ route('admin.datamaster') }}" style="text-decoration: none; color: inherit;">
             <div class="sidebar-header">
                 <div class="sidebar-header-icon">
                     <i class="bi bi-grid-1x2-fill"></i>
@@ -550,67 +563,69 @@
                     <div class="sidebar-header-sub">Menu administrasi sistem</div>
                 </div>
             </div>
+        </a>
 
-            <hr class="sidebar-divider">
+        <hr class="sidebar-divider">
 
-            <div class="sidebar-section-title">Dashboard</div>
-            <div class="sidebar-menu">
-                <a href="{{ route('interface.dashboard') }}" class="sidebar-link">
-                    <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
-                </a>
-            </div>
+        <div class="sidebar-section-title">Dashboard</div>
+        <div class="sidebar-menu">
+            <a href="{{ route('interface.dashboard') }}" class="sidebar-link">
+                <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
+            </a>
+        </div>
 
-            <div class="sidebar-section-title">User &amp; Staff</div>
-            <div class="sidebar-menu">
-                <a href="{{ route('admin.user.data') }}" class="sidebar-link">
-                    <i class="bi bi-people-fill"></i> <span>Data User</span>
-                </a>
-                <a href="{{ route('admin.dokter.index') }}" class="sidebar-link">
-                    <i class="bi bi-person-badge"></i> <span>Data Dokter</span>
-                </a>
-                <a href="{{ route('admin.perawat.index') }}" class="sidebar-link">
-                    <i class="bi bi-person-heart"></i> <span>Data Perawat</span>
-                </a>
-                <a href="{{ route('admin.resepsionis.index') }}" class="sidebar-link">
-                    <i class="bi bi-headset"></i> <span>Data Resepsionis</span>
-                </a>
-                <a href="{{ route('admin.role.manajemen') }}" class="sidebar-link">
-                    <i class="bi bi-shield-lock"></i> <span>Manajemen Role</span>
-                </a>
-            </div>
+        <div class="sidebar-section-title">User &amp; Staff</div>
+        <div class="sidebar-menu">
+            <a href="{{ route('admin.user.data') }}" class="sidebar-link">
+                <i class="bi bi-people-fill"></i> <span>Data User</span>
+            </a>
+            <a href="{{ route('admin.dokter.index') }}" class="sidebar-link">
+                <i class="bi bi-person-badge"></i> <span>Data Dokter</span>
+            </a>
+            <a href="{{ route('admin.perawat.index') }}" class="sidebar-link">
+                <i class="bi bi-person-heart"></i> <span>Data Perawat</span>
+            </a>
+            <a href="{{ route('admin.resepsionis.index') }}" class="sidebar-link">
+                <i class="bi bi-headset"></i> <span>Data Resepsionis</span>
+            </a>
+            <a href="{{ route('admin.role.manajemen') }}" class="sidebar-link">
+                <i class="bi bi-shield-lock"></i> <span>Data Role</span>
+            </a>
+        </div>
 
-            <div class="sidebar-section-title">Master Data</div>
-            <div class="sidebar-menu">
-                <a href="{{ route('dokter.jenis.data') }}" class="sidebar-link">
-                    <i class="bi bi-grid-3x3-gap-fill"></i> <span>Jenis Hewan</span>
-                </a>
-                <a href="{{ route('dokter.ras.data') }}" class="sidebar-link">
-                    <i class="bi bi-diagram-3"></i> <span>Ras Hewan</span>
-                </a>
-                <a href="{{ route('resepsionis.pemilik') }}" class="sidebar-link">
-                    <i class="bi bi-person-vcard"></i> <span>Data Pemilik</span>
-                </a>
-                <a href="{{ route('resepsionis.pet') }}" class="sidebar-link">
-                    <i class="bi bi-bag-heart"></i> <span>Data Pet</span>
-                </a>
-                <a href="{{ route('admin.kategori.data') }}" class="sidebar-link">
-                    <i class="bi bi-tag"></i> <span>Kategori</span>
-                </a>
-                <a href="{{ route('admin.kategoriklinis.data') }}" class="sidebar-link">
-                    <i class="bi bi-journal-medical"></i> <span>Kategori Klinis</span>
-                </a>
-                <a href="{{ route('admin.kodetindakan.data') }}" class="sidebar-link">
-                    <i class="bi bi-code-square"></i> <span>Kode Tindakan</span>
-                </a>
-            </div>
+        <div class="sidebar-section-title">Master Data</div>
+        <div class="sidebar-menu">
+            <a href="{{ route('dokter.jenis.data') }}" class="sidebar-link">
+                <i class="bi bi-grid-3x3-gap-fill"></i> <span>Jenis Hewan</span>
+            </a>
+            <a href="{{ route('dokter.ras.data') }}" class="sidebar-link">
+                <i class="bi bi-diagram-3"></i> <span>Ras Hewan</span>
+            </a>
+            <a href="{{ route('resepsionis.pemilik') }}" class="sidebar-link">
+                <i class="bi bi-person-vcard"></i> <span>Data Pemilik</span>
+            </a>
+            <a href="{{ route('resepsionis.pet') }}" class="sidebar-link">
+                <i class="bi bi-bag-heart"></i> <span>Data Pet</span>
+            </a>
+            <a href="{{ route('admin.kategori.data') }}" class="sidebar-link">
+                <i class="bi bi-tag"></i> <span>Kategori</span>
+            </a>
+            <a href="{{ route('admin.kategoriklinis.data') }}" class="sidebar-link">
+                <i class="bi bi-journal-medical"></i> <span>Kategori Klinis</span>
+            </a>
+            <a href="{{ route('admin.kodetindakan.data') }}" class="sidebar-link">
+                <i class="bi bi-code-square"></i> <span>Kode Tindakan</span>
+            </a>
+        </div>
 
-            <div class="sidebar-bottom">
-                &copy; {{ date('Y') }} Klinik Hewan
-            </div>
-        </aside>
+        <div class="sidebar-bottom">
+            &copy; {{ date('Y') }} Klinik Hewan
+        </div>
+    </aside>
 
-        <!-- CONTENT -->
-        <main class="content">
+    <!-- MAIN AREA -->
+    <div class="main-area">
+        <div class="content">
             <div class="page-header">
                 <h2>Halaman Data Master</h2>
                 <p>Silakan pilih menu di sidebar untuk mengelola data.</p>
@@ -663,38 +678,40 @@
                     @endforeach
                 </ul>
             </div>
-        </main>
-    </div>
-
-    <!-- QUICK ACTION BUTTONS -->
-    <div class="quick-actions">
-        <a href="{{ route('admin.user.create') }}">+ Tambah User</a>
-        <a href="{{ route('dokter.jenis.create') }}">+ Jenis Hewan</a>
-        <a href="{{ route('resepsionis.pet.create') }}">+ Tambah Pet</a>
-    </div>
-
-    <!-- NOTIF MODAL -->
-    <div id="notifModal">
-        <div id="notifBox">
-            <h3 style="margin-top:0;color:#102f76;">Notifikasi</h3>
-            <ul style="padding-left:0;list-style:none;">
-                @foreach($activities as $a)
-                    <li style="margin-bottom:8px;padding:8px 10px;background:#f4f4f4;border-radius:8px;">
-                        {{ $a->activity }}
-                        <br>
-                        <small style="opacity:.6">{{ $a->created_at->diffForHumans() }}</small>
-                    </li>
-                @endforeach
-            </ul>
-
-            <button onclick="document.getElementById('notifModal').style.display='none'"
-                style="background:#102f76;color:#fff;padding:6px 14px;border:none;border-radius:8px;margin-top:10px;">
-                Tutup
-            </button>
         </div>
-    </div>
+    </div><!-- /main-area -->
 
-    <script>
+</div><!-- /layout -->
+
+<!-- QUICK ACTION BUTTONS -->
+<div class="quick-actions">
+    <a href="{{ route('admin.user.create') }}">+ Tambah User</a>
+    <a href="{{ route('dokter.jenis.create') }}">+ Jenis Hewan</a>
+    <a href="{{ route('resepsionis.pet.create') }}">+ Tambah Pet</a>
+</div>
+
+<!-- NOTIF MODAL -->
+<div id="notifModal">
+    <div id="notifBox">
+        <h3 style="margin-top:0;color:#102f76;">Notifikasi</h3>
+        <ul style="padding-left:0;list-style:none;">
+            @foreach($activities as $a)
+                <li style="margin-bottom:8px;padding:8px 10px;background:#f4f4f4;border-radius:8px;">
+                    {{ $a->activity }}
+                    <br>
+                    <small style="opacity:.6">{{ $a->created_at->diffForHumans() }}</small>
+                </li>
+            @endforeach
+        </ul>
+
+        <button onclick="document.getElementById('notifModal').style.display='none'"
+            style="background:#102f76;color:#fff;padding:6px 14px;border:none;border-radius:8px;margin-top:10px;">
+            Tutup
+        </button>
+    </div>
+</div>
+
+<script>
     // PIE CHART (Distribusi Jenis Hewan)
     new Chart(document.getElementById('pieChart'), {
         type: 'pie',

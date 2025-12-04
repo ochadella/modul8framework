@@ -9,9 +9,7 @@ class PerawatController extends Controller
 {
     public function index()
     {
-        $perawat = User::whereHas('roles', function($q) {
-            $q->where('nama_role', 'Perawat');
-        })->get();
+        $perawat = User::where('role', 'Perawat')->get();
 
         return view('admin.perawat.index', compact('perawat'));
     }
@@ -27,11 +25,20 @@ class PerawatController extends Controller
             'nama'     => $request->nama,
             'email'    => $request->email,
             'password' => bcrypt('123'),
+            'role'     => 'Perawat'
         ]);
-
-        // idrole=3 biasanya Perawat
-        $user->roles()->attach(3);
 
         return redirect()->route('admin.perawat.index');
     }
+
+    public function reset($id){
+    $user = User::findOrFail($id);
+
+    $user->update([
+        'password' => bcrypt("123456")
+    ]);
+
+    return back()->with('success', 'Password perawat berhasil direset menjadi 123456!');
+    }
+
 }

@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Resepsionis - RSHP</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -42,6 +43,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      padding: 2rem;
     }
     .menu-card:hover {
       transform: translateY(-5px);
@@ -56,15 +58,17 @@
       font-weight: 600;
     }
     h1 {
-      background: linear-gradient(90deg, #FFFF 0%, #f9a01b 80%);
+      background: linear-gradient(90deg, #FFFFFF 0%, #f9a01b 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
       font-weight: 700;
     }
     .intro-text {
-      background: linear-gradient(90deg, #FFFF 0%, #f9a01b 80%);
+      background: linear-gradient(90deg, #FFFFFF 0%, #f9a01b 80%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      background-clip: text;
       font-weight: 500;
     }
     .badge {
@@ -73,7 +77,7 @@
       font-weight: 600;
     }
     .text-muted {
-      color: #142a46 !important;
+      color: #555 !important;
     }
     .row > div {
       display: flex;
@@ -81,25 +85,30 @@
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-bold">💁‍♀️ Resepsionis RSHP</a>
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item"><a href="{{ url('/dashboard_resepsionis') }}" class="nav-link active">Dashboard</a></li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            Registrasi
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{{ url('/resepsionis/pemilik/datapemilik') }}">Registrasi Pemilik</a></li>
-            <li><a class="dropdown-item" href="{{ url('/resepsionis/pet/datapet') }}">Registrasi Pet</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a href="{{ url('/resepsionis/temudokter/temudokter') }}" class="nav-link">Temu Dokter</a>
-        </li>
-        <li class="nav-item"><a href="{{ url('/logout') }}" class="nav-link">Logout</a></li>
-      </ul>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a href="{{ route('dashboard.resepsionis') }}" class="nav-link active">Dashboard</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              Registrasi
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{ route('resepsionis.pemilik') }}">Registrasi Pemilik</a></li>
+              <li><a class="dropdown-item" href="{{ route('resepsionis.pet') }}">Registrasi Pet</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('resepsionis.temudokter') }}" class="nav-link">Temu Dokter</a>
+          </li>
+          <li class="nav-item"><a href="{{ route('logout') }}" class="nav-link">Logout</a></li>
+        </ul>
+      </div>
     </div>
   </nav>
 
@@ -109,8 +118,8 @@
 
     <div class="row justify-content-center g-4">
       <div class="col-md-4 d-flex">
-        <a href="{{ url('/resepsionis/pemilik/datapemilik') }}" class="w-100 text-decoration-none">
-          <div class="menu-card p-4 w-100">
+        <a href="{{ route('resepsionis.pemilik') }}" class="w-100 text-decoration-none">
+          <div class="menu-card w-100">
             <i class="bi bi-person-vcard menu-icon"></i>
             <h5 class="card-title mt-3">Registrasi Pemilik</h5>
             <p class="text-muted small">Registrasi & kelola data pemilik hewan.</p>
@@ -119,8 +128,8 @@
       </div>
 
       <div class="col-md-4 d-flex">
-        <a href="{{ url('/resepsionis/pet/datapet') }}" class="w-100 text-decoration-none">
-          <div class="menu-card p-4 w-100">
+        <a href="{{ route('resepsionis.pet') }}" class="w-100 text-decoration-none">
+          <div class="menu-card w-100">
             <i class="bi bi-plus-circle menu-icon"></i>
             <h5 class="card-title mt-3">Registrasi Pet</h5>
             <p class="text-muted small">Registrasikan hewan baru ke sistem RSHP.</p>
@@ -129,12 +138,12 @@
       </div>
 
       <div class="col-md-4 d-flex">
-        <a href="{{ url('/resepsionis/temudokter/temudokter') }}" class="w-100 text-decoration-none">
-          <div class="menu-card p-4 w-100">
+        <a href="{{ route('resepsionis.temudokter') }}" class="w-100 text-decoration-none">
+          <div class="menu-card w-100">
             <i class="bi bi-calendar-check menu-icon"></i>
             <h5 class="card-title mt-3">Temu Dokter</h5>
             <p class="text-muted small">Kelola jadwal dan antrian pasien hewan.</p>
-            <span class="badge bg-warning text-dark">🐾 {{ $total_antrian }} antrian menunggu</span>
+            <span class="badge mt-2">🐾 {{ $total_antrian }} antrian menunggu</span>
           </div>
         </a>
       </div>

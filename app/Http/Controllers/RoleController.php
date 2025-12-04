@@ -2,61 +2,84 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
-use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+    // ============================
+    // 1. HALAMAN MASTER ROLE
+    // ============================
     public function index()
     {
-        // Ambil semua user dengan role-nya
-        $users = User::with('roles')->get();
-        $role = Role::all();
+        $roles = Role::all();
 
-        $userRoles = ['data' => []];
+        $roleData = [];
 
-        foreach ($users as $user) {
-            $userRoles['data'][] = [
-                'iduser' => $user->iduser,
-                'nama'   => $user->nama,
-                'email'  => $user->email,
-                'role'   => $user->roles->pluck('nama_role')->implode(', ')
+        foreach ($roles as $r) {
+            $jumlahUser = User::where('role', $r->nama_role)->count();
+
+            $roleData[] = [
+                'idrole'      => $r->idrole,
+                'nama_role'   => $r->nama_role,
+                'jumlah_user' => $jumlahUser,
             ];
         }
 
-        return view('admin.role.manajemenrole', compact('userRoles', 'role'));
+        return view('admin.role.datarole', compact('roleData'));
     }
 
+    // ============================
+    // 2. TAMBAH ROLE BARU
+    // ============================
     public function store(Request $request)
     {
-        $iduser = $request->iduser;
-        $idrole = $request->idrole;
+        // Generate ID manual agar rapi dan tidak bolong
+        $nextId = (Role::max('idrole') ?? 0) + 1;
 
-        $user = User::findOrFail($iduser);
+        Role::create([
+            'idrole'    => $nextId,
+            'nama_role' => $request->nama_role,
+            'status'    => $request->status
+        ]);
 
-        // Tambahkan role (tanpa hapus role sebelumnya)
-        $user->roles()->syncWithoutDetaching([$idrole]);
-
-        return back()->with('success', 'Role berhasil ditambahkan!');
+        return back()->with('success', 'Role baru berhasil ditambahkan');
     }
 
-    public function destroy($iduser)
+    // ============================
+    // 3. EDIT ROLE (TAMPILKAN FORM)
+    // ============================
+    public function edit($idrole)
     {
-        $user = User::findOrFail($iduser);
-        $user->roles()->detach();
-
-        return back()->with('success', 'Semua role user berhasil dihapus!');
+        $role = Role::where('idrole', $idrole)->firstOrFail();
+        
+        return view('admin.role.editrole', compact('role'));
     }
 
-    /* ⭐⭐⭐ DITAMBAHKAN TANPA MENGGANGGU CODE LAIN ⭐⭐⭐ */
-    public function deleteAll($iduser)
+    // ============================
+    // 4. UPDATE ROLE (SIMPAN PERUBAHAN)
+    // ============================
+    public function update(Request $request, $idrole)
     {
-        $user = User::findOrFail($iduser);
+        $role = Role::where('idrole', $idrole)->firstOrFail();
+        
+        $role->update([
+            'nama_role' => $request->nama_role,
+            'status'    => $request->status
+        ]);
 
-        // hapus semua role user ini
-        $user->roles()->detach();
+        return redirect()->route('admin.role.manajemen')
+                         ->with('success', 'Role berhasil diupdate!');
+    }
 
-        return back()->with('success', 'Seluruh role user berhasil dihapus!');
+    // ============================
+    // 5. HAPUS ROLE (MASTER)
+    // ============================
+    public function destroy($idrole)
+    {
+        Role::where('idrole', $idrole)->delete();
+
+        return back()->with('success', 'Role berhasil dihapus!');
     }
 }

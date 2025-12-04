@@ -10,10 +10,9 @@ class Role extends Model
     protected $primaryKey = 'idrole';
     public $timestamps = false;
 
-    protected $fillable = ['nama_role'];
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'user_role', 'idrole', 'iduser');
-    }
+    protected $fillable = [
+        'idrole',
+        'nama_role',
+        'status'
+    ];
 }

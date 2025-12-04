@@ -1,128 +1,19 @@
-<?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-if (isset($_POST['login'])) {
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-
-    // ✅ Daftar akun login (ditambah akun angelyna)
-    $accounts = [
-        [
-            'email' => 'admin@mail.com',
-            'password' => '123456',
-            'nama' => 'Admin RSHP',
-            'role' => 'admin',
-            'redirect' => '/interface/dashboard'
-        ],
-        [
-            'email' => 'resepsionis@mail.com',
-            'password' => '654321',
-            'nama' => 'Resepsionis Angel',
-            'role' => 'resepsionis',
-            // ✅ Path diperbaiki agar menuju ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_resepsionis'
-        ],
-        [
-            // ✅ Tambahan akun kamu
-            'email' => 'azzam@mail.com',
-            'password' => '123456',
-            'nama' => 'Azzam',
-            'role' => 'resepsionis',
-            // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_resepsionis'
-        ],
-        [
-            // ✅ Tambahan akun kamu
-            'email' => 'angelyna@mail.com',
-            'password' => '123456',
-            'nama' => 'Angelyna',
-            'role' => 'resepsionis',
-            // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_resepsionis'
-        ],
-        [
-            // ✅ Tambahan akun kamu
-            'email' => 'daffa@mail.com',
-            'password' => '123456',
-            'nama' => 'Daffa',
-            'role' => 'perawat',
-            // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_perawat'
-        ],
-        [
-            // ✅ Tambahan akun kamu
-            'email' => 'ryan@mail.com',
-            'password' => '123456',
-            'nama' => 'Ryan',
-            'role' => 'perawat',
-            // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_perawat'
-        ],
-        [
-            // ✅ Tambahan akun kamu
-            'email' => 'ocalucu@mail.com',
-            'password' => '123456',
-            'nama' => 'ocaa',
-            'role' => 'dokter',
-            // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_dokter'
-        ],
-        [
-            // ✅ Tambahan akun kamu
-            'email' => 'mayshalucu@mail.com',
-            'password' => '123456',
-            'nama' => 'Maysha',
-            'role' => 'dokter',
-            // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_dokter'
-        ],
-        [
-            // ✅ Tambahan akun kamu
-            'email' => 'ale@mail.com',
-            'password' => '123456',
-            'nama' => 'Ale',
-            'role' => 'dokter',
-            // ✅ Arahkan juga ke interface/dashboard_resepsionis.php
-            'redirect' => '../interface/dashboard_dokter'
-
-        ]
-    ];
-
-    $found = null;
-    foreach ($accounts as $acc) {
-        if ($email === $acc['email'] && $password === $acc['password']) {
-            $found = $acc;
-            break;
-        }
-    }
-
-    if ($found) {
-        $_SESSION['user'] = [
-            'logged_in' => true,
-            'email' => $found['email'],
-            'nama' => $found['nama'],
-            'role' => $found['role']
-        ];
-        $_SESSION['nama'] = $found['nama'];
-        header("Location: " . $found['redirect']);
-        exit;
-    } else {
-        $error = "Email atau Password salah!";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login RSHP</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(to right, #142a46, #102f76, #f9a01b);
-            margin: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -130,59 +21,124 @@ if (isset($_POST['login'])) {
         }
         .login-container {
             background-color: #fff;
-            padding: 30px;
+            padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            width: 350px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            width: 380px;
             text-align: center;
         }
         .login-container h2 {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             color: #102f76;
+            font-size: 24px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-size: 13px;
+            font-weight: 600;
         }
         .login-container input {
-            width: 90%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #142a46;
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 14px;
+            transition: border 0.3s;
+        }
+        .login-container input:focus {
+            outline: none;
+            border-color: #102f76;
         }
         .login-container button {
             background: linear-gradient(to right, #f9a01b, #ff9554);
             color: white;
-            padding: 12px;
+            padding: 14px;
             width: 100%;
             border: none;
             border-radius: 8px;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 16px;
             cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
         }
         .login-container button:hover {
             background: linear-gradient(to right, #ff9554, #f9a01b);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(249,160,27,0.4);
         }
         .error {
-            margin-top: 15px;
-            color: red;
-            font-weight: bold;
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            text-align: left;
+        }
+        .success {
+            background: #efe;
+            border: 1px solid #cfc;
+            color: #3c3;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
+
 <div class="login-container">
-    <h2>Login RSHP</h2>
-    <?php if (isset($error)) : ?>
-        <p class="error"><?= htmlspecialchars($error) ?></p>
-    <?php endif; ?>
+    <h2>🏥 Login RSHP</h2>
 
-    <form action="/login" method="POST">
+    @if ($errors->any())
+        <div class="error">
+            @foreach ($errors->all() as $error)
+                • {{ $error }}<br>
+            @endforeach
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <form action="{{ route('login') }}" method="POST">
         @csrf
-        <input type="email" name="email" placeholder="Email" required><br>
-        <input type="password" name="password" placeholder="Password" required><br>
-        <button type="submit" name="login">Login</button>
-    </form>
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" 
+                   id="email" 
+                   name="email" 
+                   placeholder="Masukkan email" 
+                   value="{{ old('email') }}" 
+                   required 
+                   autofocus>
+        </div>
 
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" 
+                   id="password" 
+                   name="password" 
+                   placeholder="Masukkan password" 
+                   required>
+        </div>
+
+        <button type="submit">Login</button>
+    </form>
 </div>
+
 </body>
 </html>

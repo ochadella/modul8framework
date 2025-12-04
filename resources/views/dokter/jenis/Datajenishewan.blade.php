@@ -2,15 +2,17 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Data Jenis Hewan</title>
 
     <!-- BOOTSTRAP ICONS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        /* =======================================================
-           🌟 BACKGROUND GRADIENT ORANGE SOFT (SAMA PERSIS)
-        ======================================================== */
+        /* =====================================================
+           🌟 BACKGROUND GRADIENT ELEGANT ORANGE SOFT
+        ====================================================== */
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
@@ -38,9 +40,7 @@
             z-index: -1;
         }
 
-        /* =======================================================
-           🌟 NAVBAR (COPY EXACT)
-        ======================================================== */
+        /* ================= NAVBAR (TOP) ================= */
         .navbar {
             position: sticky;
             top: 0;
@@ -159,90 +159,127 @@
             filter: brightness(1.05);
         }
 
-        /* =======================================================
-           🌟 LAYOUT (SIDEBAR + MAIN AREA)
-        ======================================================== */
+        /* ================= LAYOUT: SIDEBAR + MAIN ================= */
         .layout {
-            max-width: 1400px;
+            max-width: 1420px;
             margin: 24px auto 40px;
             display: flex;
             gap: 22px;
         }
 
-        /* ================= SIDEBAR (COPY EXACT) ================= */
+        /* ---------- SIDEBAR (SAMA PERSIS) ---------- */
         .sidebar {
-            width: 230px;
+            width: 215px;
+            border-radius: 24px;
             background: linear-gradient(180deg, #102f76 0%, #142a46 100%);
-            border-radius: 18px;
-            padding: 20px 16px 24px;
-            color: #ffffff;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+            color: #fff;
+            box-shadow: 0 18px 38px rgba(0,0,0,0.35);
+            padding: 26px 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
         }
 
-        .sidebar-title {
+        .sidebar-header {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            padding: 4px 6px 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.12);
+            gap: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 12px;
+            transition: 0.25s ease;
         }
 
-        .sidebar-title i {
+        .sidebar-header:hover {
+            background: rgba(255,255,255,0.08);
+        }
+
+        .sidebar-header-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 18px;
+            background: rgba(250, 177, 64, 0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .sidebar-header-title {
+            display: flex;
+            flex-direction: column;
             font-size: 18px;
-            padding: 6px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.1);
+            font-weight: 700;
+        }
+
+        .sidebar-header-sub {
+            font-size: 12px;
+            opacity: .8;
+            font-weight: 500;
+        }
+
+        .sidebar-divider {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.18);
+            margin: 8px 0 6px;
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            letter-spacing: 1px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.65);
+            margin-top: 6px;
         }
 
         .sidebar-menu {
             display: flex;
             flex-direction: column;
             gap: 4px;
-            margin-top: 6px;
         }
 
         .sidebar-link {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 8px 10px;
-            border-radius: 10px;
-            color: #e6efff;
-            font-size: 13px;
+            padding: 9px 10px;
+            border-radius: 12px;
+            color: #e9f1ff;
+            font-size: 14px;
+            transition: 0.25s ease;
             text-decoration: none;
-            transition: 0.2s ease;
         }
 
         .sidebar-link i {
-            font-size: 16px;
+            font-size: 18px;
         }
 
-        .sidebar-link:hover,
+        .sidebar-link:hover {
+            background: rgba(255,255,255,0.10);
+            transform: translateX(3px);
+        }
+
         .sidebar-link.active {
-            background: rgba(249,160,27,0.16);
-            color: #ffffff;
+            background: rgba(18,25,55,0.85);
+            box-shadow: 0 10px 24px rgba(0,0,0,0.45);
         }
 
-        .sidebar-section {
+        .sidebar-bottom {
+            margin-top: auto;
             font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.6;
-            margin: 10px 4px 4px;
+            opacity: .7;
+            text-align: center;
+            padding-top: 8px;
         }
 
-        /* =======================================================
-           🌟 MAIN AREA
-        ======================================================== */
+        /* ---------- MAIN AREA ---------- */
         .main-area {
             flex: 1;
         }
 
-        /* =======================================================
-           🌟 PAGE HEADER (COPY EXACT)
-        ======================================================== */
+        /* ================= CENTERED PAGE HEADER ================= */
         .page-header {
             text-align: center;
             margin-bottom: 20px;
@@ -269,9 +306,7 @@
             color: #3c3c3c;
         }
 
-        /* =======================================================
-           🌟 CONTAINER CARD
-        ======================================================== */
+        /* ================= CONTAINER CARD ================= */
         .container {
             margin: 0 auto;
             max-width: 100%;
@@ -288,9 +323,7 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* =======================================================
-           🌟 BUTTONS (EXACT)
-        ======================================================== */
+        /* ================= BUTTONS ================= */
         .btn-add {
             padding: 12px 20px;
             background: linear-gradient(90deg, #f9a01b, #ffba4c);
@@ -299,6 +332,15 @@
             font-weight: 700;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(249,160,27,0.35);
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(249,160,27,0.45);
         }
 
         .btn-back {
@@ -311,9 +353,11 @@
             font-weight: 600;
         }
 
-        /* =======================================================
-           🌟 TABLE (EXACT)
-        ======================================================== */
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        /* ================= TABLE ================= */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -328,24 +372,22 @@
             color: #f9a01b;
             padding: 15px;
             font-size: 16px;
-            text-align: center !important;
+            text-align: center;
         }
 
         td {
             padding: 14px;
             background: rgba(255,255,255,0.82);
             border-bottom: 1px solid rgba(0,0,0,0.05);
-            text-align: center !important;
-            vertical-align: middle !important;
+            text-align: center;
+            vertical-align: middle;
         }
 
         tr:hover td {
             background: rgba(249,160,27,0.13);
         }
 
-        /* =======================================================
-           🌟 ACTION BUTTON STYLE (EXACT)
-        ======================================================== */
+        /* ================= ACTION ICONS ================= */
         .action-icons {
             display: flex;
             justify-content: center;
@@ -358,11 +400,35 @@
             color: #102f76;
             cursor: pointer;
             text-decoration: none;
+            transition: 0.2s ease;
         }
 
         .icon-btn:hover {
             color: #f9a01b;
             transform: translateY(-2px);
+        }
+
+        .icon-btn.delete:hover {
+            color: #ff4d4d;
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1100px) {
+            .layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                overflow-x: auto;
+            }
+            .sidebar-menu {
+                flex-direction: row;
+                flex-wrap: nowrap;
+            }
+            .sidebar-section-title {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -376,9 +442,7 @@
     $initial     = strtoupper(mb_substr($displayName, 0, 1));
 @endphp
 
-<!-- =======================================================
-     🔵 NAVBAR
-======================================================= -->
+<!-- TOP NAVBAR -->
 <div class="navbar">
     <div class="nav-left">
         <i class="bi bi-hospital nav-logo"></i>
@@ -409,88 +473,96 @@
     </div>
 </div>
 
-<!-- =======================================================
-     🔵 LAYOUT WRAPPER
-======================================================= -->
 <div class="layout">
 
-    <!-- =======================================================
-         🔵 SIDEBAR (COPY EXACT)
-    ======================================================= -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div class="sidebar-title">
-            <i class="bi bi-grid-fill"></i>
-            <span>Data Master</span>
+        <a href="{{ route('admin.datamaster') }}" style="text-decoration: none; color: inherit;">
+            <div class="sidebar-header">
+                <div class="sidebar-header-icon">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                </div>
+                <div>
+                    <div class="sidebar-header-title">Data Master</div>
+                    <div class="sidebar-header-sub">Menu administrasi sistem</div>
+                </div>
+            </div>
+        </a>
+
+        <hr class="sidebar-divider">
+
+        <div class="sidebar-section-title">Dashboard</div>
+        <div class="sidebar-menu">
+            <a href="{{ route('interface.dashboard') }}" class="sidebar-link">
+                <i class="bi bi-speedometer2"></i> <span>Dashboard</span>
+            </a>
         </div>
 
+        <div class="sidebar-section-title">User &amp; Staff</div>
         <div class="sidebar-menu">
-            <div class="sidebar-section">Dashboard</div>
-            <a href="{{ route('interface.dashboard') }}" class="sidebar-link">
-                <i class="bi bi-speedometer2"></i><span>Dashboard</span>
-            </a>
-
-            <div class="sidebar-section">User & Staff</div>
             <a href="{{ route('admin.user.data') }}" class="sidebar-link">
-                <i class="bi bi-people-fill"></i><span>Data User</span>
+                <i class="bi bi-people-fill"></i> <span>Data User</span>
             </a>
             <a href="{{ route('admin.dokter.index') }}" class="sidebar-link">
-                <i class="bi bi-stethoscope"></i><span>Data Dokter</span>
+                <i class="bi bi-person-badge"></i> <span>Data Dokter</span>
             </a>
             <a href="{{ route('admin.perawat.index') }}" class="sidebar-link">
-                <i class="bi bi-clipboard2-pulse"></i><span>Data Perawat</span>
+                <i class="bi bi-person-heart"></i> <span>Data Perawat</span>
             </a>
             <a href="{{ route('admin.resepsionis.index') }}" class="sidebar-link">
-                <i class="bi bi-headset"></i><span>Data Resepsionis</span>
+                <i class="bi bi-headset"></i> <span>Data Resepsionis</span>
             </a>
             <a href="{{ route('admin.role.manajemen') }}" class="sidebar-link">
-                <i class="bi bi-shield-lock-fill"></i><span>Manajemen Role</span>
+                <i class="bi bi-shield-lock"></i> <span>Data Role</span>
             </a>
+        </div>
 
-            <div class="sidebar-section">Master Data</div>
+        <div class="sidebar-section-title">Master Data</div>
+        <div class="sidebar-menu">
             <a href="{{ route('dokter.jenis.data') }}" class="sidebar-link active">
-                <i class="bi bi-ui-checks-grid"></i><span>Jenis Hewan</span>
+                <i class="bi bi-grid-3x3-gap-fill"></i> <span>Jenis Hewan</span>
             </a>
             <a href="{{ route('dokter.ras.data') }}" class="sidebar-link">
-                <i class="bi bi-diagram-3-fill"></i><span>Ras Hewan</span>
+                <i class="bi bi-diagram-3"></i> <span>Ras Hewan</span>
             </a>
             <a href="{{ route('resepsionis.pemilik') }}" class="sidebar-link">
-                <i class="bi bi-person-vcard-fill"></i><span>Data Pemilik</span>
+                <i class="bi bi-person-vcard"></i> <span>Data Pemilik</span>
             </a>
             <a href="{{ route('resepsionis.pet') }}" class="sidebar-link">
-                <i class="bi bi-bag-heart-fill"></i><span>Data Pet</span>
+                <i class="bi bi-bag-heart"></i> <span>Data Pet</span>
             </a>
             <a href="{{ route('admin.kategori.data') }}" class="sidebar-link">
-                <i class="bi bi-tags-fill"></i><span>Kategori</span>
+                <i class="bi bi-tag"></i> <span>Kategori</span>
             </a>
             <a href="{{ route('admin.kategoriklinis.data') }}" class="sidebar-link">
-                <i class="bi bi-card-checklist"></i><span>Kategori Klinis</span>
+                <i class="bi bi-journal-medical"></i> <span>Kategori Klinis</span>
             </a>
             <a href="{{ route('admin.kodetindakan.data') }}" class="sidebar-link">
-                <i class="bi bi-code-square"></i><span>Kode Tindakan</span>
+                <i class="bi bi-code-square"></i> <span>Kode Tindakan</span>
             </a>
+        </div>
+
+        <div class="sidebar-bottom">
+            &copy; {{ date('Y') }} Klinik Hewan
         </div>
     </aside>
 
-    <!-- =======================================================
-         🔵 MAIN AREA
-    ======================================================= -->
+    <!-- MAIN AREA -->
     <div class="main-area">
 
-        <!-- PAGE HEADER -->
+        <!-- HEADER TENGAH -->
         <div class="page-header">
-            <i class="bi bi-ui-checks-grid page-header-icon"></i>
+            <i class="bi bi-grid-3x3-gap-fill page-header-icon"></i>
             <h1>Data Jenis Hewan</h1>
             <p>Daftar jenis hewan yang terdaftar dalam sistem.</p>
         </div>
 
-        <!-- MAIN CONTAINER -->
+        <!-- KONTEN UTAMA -->
         <div class="container">
 
-            <!-- BUTTONS -->
             <a href="{{ route('dokter.jenis.create') }}" class="btn-add">+ Tambah Jenis Hewan</a>
             <a href="{{ route('admin.datamaster') }}" class="btn-back">← Kembali</a>
 
-            <!-- TABLE -->
             <table>
                 <thead>
                     <tr>
@@ -505,19 +577,20 @@
                         <tr>
                             <td>{{ $r->idjenis_hewan }}</td>
                             <td>{{ $r->nama_jenis_hewan }}</td>
-
                             <td>
                                 <div class="action-icons">
                                     <!-- EDIT -->
                                     <a class="icon-btn"
-                                       href="{{ route('dokter.jenis.edit', $r->idjenis_hewan) }}">
+                                       href="{{ route('dokter.jenis.edit', $r->idjenis_hewan) }}"
+                                       title="Edit Jenis Hewan">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
 
                                     <!-- DELETE -->
                                     <a class="icon-btn"
                                        href="{{ route('dokter.jenis.delete', $r->idjenis_hewan) }}"
-                                       onclick="return confirm('Hapus jenis hewan ini?')">
+                                       onclick="return confirm('Hapus jenis hewan ini?')"
+                                       title="Hapus Jenis Hewan">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </div>
@@ -529,12 +602,11 @@
                         </tr>
                     @endforelse
                 </tbody>
-
             </table>
 
         </div><!-- /container -->
-
     </div><!-- /main-area -->
+
 </div><!-- /layout -->
 
 </body>

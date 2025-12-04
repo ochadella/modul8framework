@@ -4,118 +4,203 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Role;
 
 class UserController extends Controller
 {
-
     /* ============================ */
     /*     INDEX (WAJIB ADA)       */
     /* ============================ */
     public function index()
     {
-        // Ambil semua user
         $users = User::all();
-
-        // Ambil semua role untuk dropdown tambah user
         $roles = Role::all();
 
-        // Kembalikan ke view
         return view('admin.user.datauser', compact('users', 'roles'));
     }
-
 
     /* ============================ */
     /*     TAMBAH USER             */
     /* ============================ */
     public function store(Request $req)
     {
-        $req->validate([
-            'nama' => 'required',
-            'email' => 'required|email|unique:user,email',
-            'password' => 'required|min:3',
-            'role' => 'required'
-        ]);
+        try {
+            $req->validate([
+                'nama' => 'required',
+                'email' => 'required|email|unique:user,email',
+                'password' => 'required|min:3',
+                'role' => 'required'
+            ]);
 
-        User::create([
-            'nama' => $req->nama,
-            'email' => $req->email,
-            'password' => Hash::make($req->password),
-            'role' => $req->role
-        ]);
+            // Buat iduser manual (karena tidak auto increment)
+            $nextId = (User::max('iduser') ?? 0) + 1;
 
-        return response()->json(['success' => true]);
+            User::create([
+                'iduser'   => $nextId,
+                'nama'     => $req->nama,
+                'email'    => $req->email,
+                'password' => Hash::make($req->password),
+                'role'     => $req->role,
+                'status'   => 'aktif' // DEFAULT AKTIF
+            ]);
+
+            // Cek apakah request AJAX
+            if ($req->ajax() || $req->wantsJson()) {
+                return response()->json(['success' => true]);
+            }
+
+            return redirect()->route('admin.user.data')->with('success', 'User berhasil ditambahkan');
+
+        } catch (\Exception $e) {
+            if ($req->ajax() || $req->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()]);
+            }
+            return back()->with('error', 'Gagal menambahkan user: ' . $e->getMessage());
+        }
     }
-
 
     /* ============================ */
     /*     UPDATE USER             */
     /* ============================ */
     public function update(Request $req)
     {
-        $req->validate([
-            'edit_id' => 'required',
-            'nama' => 'required',
-            'email' => 'required|email',
-            'role' => 'required'
-        ]);
+        try {
+            $req->validate([
+                'edit_id' => 'required',
+                'nama' => 'required',
+                'email' => 'required|email',
+                'role' => 'required'
+            ]);
 
-        $user = User::find($req->edit_id);
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User tidak ditemukan']);
+            $user = User::where('iduser', $req->edit_id)->first();
+            
+            if (!$user) {
+                if ($req->ajax() || $req->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => 'User tidak ditemukan']);
+                }
+                return back()->with('error', 'User tidak ditemukan');
+            }
+
+            // Cek email duplikat
+            $cekEmail = User::where('email', $req->email)
+                            ->where('iduser', '!=', $req->edit_id)
+                            ->first();
+
+            if ($cekEmail) {
+                if ($req->ajax() || $req->wantsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Email sudah digunakan']);
+                }
+                return back()->with('error', 'Email sudah digunakan');
+            }
+
+            $user->update([
+                'nama' => $req->nama,
+                'email' => $req->email,
+                'role' => $req->role
+            ]);
+
+            // Cek apakah request AJAX
+            if ($req->ajax() || $req->wantsJson()) {
+                return response()->json(['success' => true]);
+            }
+
+            return redirect()->route('admin.user.data')->with('success', 'User berhasil diupdate');
+
+        } catch (\Exception $e) {
+            if ($req->ajax() || $req->wantsJson()) {
+                return response()->json(['success' => false, 'message' => $e->getMessage()]);
+            }
+            return back()->with('error', 'Gagal mengupdate user: ' . $e->getMessage());
         }
-
-        // CEK EMAIL DUPLIKAT
-        $cekEmail = User::where('email', $req->email)
-                        ->where('iduser', '!=', $req->edit_id)
-                        ->first();
-
-        if ($cekEmail) {
-            return response()->json(['success' => false, 'message' => 'Email sudah digunakan']);
-        }
-
-        $user->update([
-            'nama' => $req->nama,
-            'email' => $req->email,
-            'role' => $req->role
-        ]);
-
-        return response()->json(['success' => true]);
     }
-
 
     /* ============================ */
     /*     RESET PASSWORD          */
     /* ============================ */
     public function resetPassword($id)
     {
-        $user = User::find($id);
+        try {
+            $user = User::where('iduser', $id)->first();
 
-        if (!$user) {
-            return back()->with('error', 'User tidak ditemukan');
+            if (!$user) {
+                return redirect()->route('admin.user.data')->with('error', 'User tidak ditemukan');
+            }
+
+            $user->password = Hash::make("123456");
+            $user->save();
+
+            return redirect()->route('admin.user.data')->with('success', 'Password berhasil direset menjadi 123456');
+            
+        } catch (\Exception $e) {
+            return redirect()->route('admin.user.data')->with('error', 'Gagal reset password: ' . $e->getMessage());
         }
-
-        $user->password = Hash::make("123456");
-        $user->save();
-
-        return back()->with('success', 'Password berhasil direset menjadi 123456');
     }
-
 
     /* ============================ */
     /*     DELETE USER             */
     /* ============================ */
     public function delete($id)
     {
-        $user = User::find($id);
+        try {
+            // Perbaikan utama: cegah error jika id NULL / tidak ada
+            if (!$id) {
+                return redirect()->route('admin.user.data')->with('error', 'ID user tidak valid');
+            }
 
-        if (!$user) {
-            return back()->with('error', 'User tidak ditemukan');
+            $user = User::where('iduser', $id)->first();
+
+            if (!$user) {
+                return redirect()->route('admin.user.data')->with('error', 'User tidak ditemukan');
+            }
+
+            // ⭐ PERBAIKAN: Hapus relasi di tabel role_user DULU sebelum hapus user
+            DB::table('role_user')->where('iduser', $id)->delete();
+
+            // Baru hapus user
+            $user->delete();
+
+            return redirect()->route('admin.user.data')->with('success', 'User berhasil dihapus');
+            
+        } catch (\Exception $e) {
+            return redirect()->route('admin.user.data')->with('error', 'Gagal menghapus user: ' . $e->getMessage());
         }
+    }
 
-        $user->delete();
+    /* ============================ */
+    /*     TOGGLE STATUS           */
+    /* ============================ */
+    public function toggleStatus($id)
+    {
+        try {
+            $user = User::where('iduser', $id)->first();
 
-        return back()->with('success', 'User berhasil dihapus');
+            if (!$user) {
+                return response()->json(['success' => false, 'message' => 'User tidak ditemukan']);
+            }
+
+            // Toggle status
+            $user->status = ($user->status === 'aktif') ? 'non-aktif' : 'aktif';
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'status' => $user->status,
+                'message' => "Status berhasil diubah menjadi {$user->status}"
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+
+    /* ============================ */
+    /*     CREATE FORM             */
+    /* ============================ */
+    public function create()
+    {
+        $roles = Role::all();
+        return view('admin.user.tambahuser', compact('roles'));
     }
 }

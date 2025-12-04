@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class ResepsionisController extends Controller
 {
     public function index()
     {
-        $resepsionis = User::whereHas('roles', function($q) {
-            $q->where('nama_role', 'Resepsionis');
-        })->get();
-
+        $resepsionis = User::where('role', 'Resepsionis')->get();
         return view('admin.resepsionis.index', compact('resepsionis'));
     }
 
@@ -27,10 +24,8 @@ class ResepsionisController extends Controller
             'nama'     => $request->nama,
             'email'    => $request->email,
             'password' => bcrypt('123'),
+            'role'     => 'Resepsionis'
         ]);
-
-        // idrole=4 biasanya resepsionis
-        $user->roles()->attach(4);
 
         return redirect()->route('admin.resepsionis.index');
     }

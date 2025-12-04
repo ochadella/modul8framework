@@ -2,20 +2,20 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Data User</title>
 
     <!-- BOOTSTRAP ICONS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        /* ================= GLOBAL ================= */
-        * {
-            box-sizing: border-box;
-        }
-
+        /* =====================================================
+           🌟 BACKGROUND GRADIENT ELEGANT ORANGE SOFT
+        ====================================================== */
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: linear-gradient(
                 180deg,
                 #ffffff 0%,
@@ -25,7 +25,6 @@
                 #ffb74a 100%
             );
             background-attachment: fixed;
-            color: #102f76;
         }
 
         body::before {
@@ -34,160 +33,143 @@
             inset: 0;
             background: radial-gradient(
                 circle at bottom,
-                rgba(255,170,40,0.25),
+                rgba(255,170,40,0.22),
                 transparent 60%
             );
             pointer-events: none;
             z-index: -1;
         }
 
-        a {
-            text-decoration: none;
-        }
-
-        /* ================= TOPBAR ================= */
-        .topbar {
-            height: 70px;
+        /* ================= NAVBAR (TOP) ================= */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
             background: linear-gradient(135deg, #102f76 0%, #142a46 100%);
+            color: #ffffff;
+            padding: 14px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 32px;
-            color: #fff;
             box-shadow: 0 4px 18px rgba(0,0,0,0.25);
         }
 
-        .topbar-left {
+        .nav-left {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .topbar-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 16px;
-            background: rgba(249,160,27,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
+        .nav-logo {
+            font-size: 30px;
+            padding: 6px 10px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
         }
 
-        .topbar-title {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-
-        .topbar-title span:first-child {
+        .brand-text-title {
             font-weight: 700;
-            letter-spacing: .5px;
-        }
-
-        .topbar-title span:last-child {
-            font-size: 12px;
-            opacity: .8;
-        }
-
-        .topbar-search {
-            flex: 0 0 420px;
-            max-width: 420px;
-        }
-
-        .topbar-search input {
-            width: 100%;
-            border-radius: 999px;
-            border: none;
-            padding: 10px 18px 10px 38px;
-            outline: none;
-            font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-            background: #fefefe;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23102f76' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: 12px center;
-        }
-
-        /* ================= MODAL TAMBAH USER ================= */
-        #modalTambah {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .topbar-right .notif {
             font-size: 18px;
-            cursor: pointer;
         }
 
-        .topbar-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(10,10,25,0.35);
-            padding: 5px 12px;
-            border-radius: 999px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+        .brand-text-sub {
+            font-size: 12px;
+            opacity: 0.8;
         }
 
-        .topbar-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 999px;
-            background: #f9a01b;
+        .nav-center {
+            flex: 1;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-weight: 700;
+            padding: 0 40px;
+        }
+
+        .nav-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border-radius: 999px;
+            padding: 6px 14px;
+            min-width: 280px;
+            max-width: 420px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .nav-search i {
             color: #102f76;
             font-size: 16px;
         }
 
-        .topbar-user {
-            display: flex;
-            flex-direction: column;
-            font-size: 12px;
+        .nav-search input {
+            border: none;
+            outline: none;
+            font-size: 13px;
+            width: 100%;
         }
 
-        .topbar-user span:first-child {
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #f9a01b;
+            color: #102f76;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.35);
+        }
+
+        .user-name {
+            font-size: 13px;
             font-weight: 600;
         }
 
-        .topbar-user span:last-child {
-            opacity: .8;
+        .user-role {
+            font-size: 11px;
+            opacity: 0.8;
         }
 
-        .topbar-logout {
-            margin-left: 6px;
-            background: #ff4d4d;
+        .btn-logout {
+            padding: 7px 14px;
             border-radius: 999px;
-            padding: 6px 12px;
+            border: none;
+            background: #f5594b;
+            color: #ffffff;
             font-size: 12px;
             font-weight: 600;
-            color: #fff;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(245,89,75,0.5);
         }
 
-        /* ================= LAYOUT WRAPPER ================= */
-        .main-wrapper {
+        .btn-logout:hover {
+            filter: brightness(1.05);
+        }
+
+        /* ================= LAYOUT: SIDEBAR + MAIN ================= */
+        .layout {
+            max-width: 1420px;
+            margin: 24px auto 40px;
             display: flex;
-            gap: 26px;
-            padding: 24px 26px 40px;
+            gap: 22px;
         }
 
-        /* ================= SIDEBAR ================= */
+        /* ---------- SIDEBAR (SAMA PERSIS SEPERTI DATA MASTER) ---------- */
         .sidebar {
-            width: 260px;
+            width: 215px;
             border-radius: 24px;
             background: linear-gradient(180deg, #102f76 0%, #142a46 100%);
             color: #fff;
@@ -203,6 +185,14 @@
             align-items: center;
             gap: 12px;
             margin-bottom: 8px;
+            cursor: pointer;
+            padding: 0;
+            border-radius: 12px;
+            transition: 0.25s ease;
+        }
+
+        .sidebar-header:hover {
+            background: rgba(255,255,255,0.08);
         }
 
         .sidebar-header-icon {
@@ -259,6 +249,7 @@
             color: #e9f1ff;
             font-size: 14px;
             transition: 0.25s ease;
+            text-decoration: none;
         }
 
         .sidebar-link i {
@@ -283,47 +274,53 @@
             padding-top: 8px;
         }
 
-        /* ================= CONTENT ================= */
-        .content {
+        /* ---------- MAIN AREA ---------- */
+        .main-area {
             flex: 1;
-            background: rgba(255,255,255,0.82);
-            border-radius: 26px;
-            box-shadow: 0 18px 36px rgba(0,0,0,0.18);
-            padding: 30px 32px 40px;
-            backdrop-filter: blur(20px);
         }
 
+        /* ================= CENTERED PAGE HEADER ================= */
         .page-header {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
-        .page-header h2 {
+        .page-header-icon {
+            font-size: 54px;
             color: #102f76;
-            font-size: 28px;
-            font-weight: 800;
-            margin: 0;
-            display: inline-block;
-            padding-bottom: 6px;
-            position: relative;
+            background: #f9a01b33;
+            padding: 20px;
+            border-radius: 50%;
         }
 
-        .page-header h2::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 0;
-            width: 60%;
-            height: 4px;
-            background: linear-gradient(90deg, #f9a01b, #ffbb56);
-            border-radius: 20px;
+        .page-header h1 {
+            margin-top: 18px;
+            font-size: 34px;
+            color: #102f76;
+            font-weight: 800;
         }
 
         .page-header p {
-            margin-top: 12px;
-            color: #555;
-            font-size: 14px;
+            margin-top: -6px;
+            font-size: 15px;
+            color: #3c3c3c;
+        }
+
+        /* ================= CONTAINER CARD ================= */
+        .container {
+            margin: 0 auto;
+            max-width: 100%;
+            background: rgba(255,255,255,0.78);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 32px 36px 40px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+            animation: fadeIn 0.45s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         /* ================= BUTTONS ================= */
@@ -336,6 +333,14 @@
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(249,160,27,0.35);
             display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(249,160,27,0.45);
         }
 
         .btn-back {
@@ -346,6 +351,10 @@
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
         }
 
         /* ================= TABLE ================= */
@@ -391,6 +400,7 @@
             color: #102f76;
             cursor: pointer;
             text-decoration: none;
+            transition: 0.2s ease;
         }
 
         .icon-btn:hover {
@@ -398,9 +408,12 @@
             transform: translateY(-2px);
         }
 
+        .icon-btn.delete:hover {
+            color: #ff4d4d;
+        }
+
         /* ================= MODAL ================= */
-        #modalTambah,
-        #modalEdit {
+        .modal {
             display: none;
             position: fixed;
             inset: 0;
@@ -410,156 +423,98 @@
             z-index: 2000;
         }
 
+        .modal.show {
+            display: flex;
+        }
+
         .modal-box {
-            width: 520px;
-            max-width: 90%;
+            width: 420px;
             background: white;
-            padding: 28px 32px;
-            border-radius: 16px;
+            padding: 26px;
+            border-radius: 14px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-            max-height: 85vh;
-            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .modal-box h2 {
             text-align: center;
             color: #102f76;
             margin-top: 0;
-            margin-bottom: 24px;
-            font-size: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
         }
 
         .modal-box label {
             font-weight: 600;
             color: #102f76;
             display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
+            margin-top: 12px;
         }
 
-        .modal-box label .required {
-            color: #ff4d4d;
-            margin-left: 2px;
-        }
-
-        .modal-box input[type="text"],
-        .modal-box input[type="email"],
-        .modal-box input[type="password"],
+        .modal-box input,
         .modal-box select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 8px;
+            margin-top: 6px;
             font-size: 14px;
-            transition: border-color 0.2s;
-        }
-
-        .modal-box input[type="text"]:focus,
-        .modal-box input[type="email"]:focus,
-        .modal-box input[type="password"]:focus,
-        .modal-box select:focus {
-            outline: none;
-            border-color: #f9a01b;
-        }
-
-        .modal-box input::placeholder {
-            color: #999;
-            font-size: 13px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .checkbox-group {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 8px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-
-        .checkbox-item label {
-            margin: 0;
-            font-weight: 500;
-            font-size: 13px;
-            cursor: pointer;
         }
 
         .modal-buttons {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
-            margin-top: 24px;
+            margin-top: 20px;
         }
 
-        .modal-btn-cancel {
-            padding: 10px 20px;
+        .btn-cancel {
+            padding: 10px 16px;
             background: #6c757d;
             border: none;
             color: #fff;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 14px;
         }
 
-        .modal-btn-submit {
-            padding: 10px 20px;
+        .btn-cancel:hover {
+            background: #5a6268;
+        }
+
+        .btn-submit {
+            padding: 10px 16px;
             background: #f9a01b;
             border: none;
             color: #102f76;
             font-weight: 700;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 14px;
         }
 
-        .modal-btn-cancel:hover {
-            background: #5a6268;
+        .btn-submit:hover {
+            background: #ffba4c;
         }
 
-        .modal-btn-submit:hover {
-            background: #ffb84d;
-        }
-
-        @media (max-width: 960px) {
-            .main-wrapper {
+        /* ================= RESPONSIVE ================= */
+        @media (max-width: 1100px) {
+            .layout {
                 flex-direction: column;
             }
             .sidebar {
                 width: 100%;
                 flex-direction: row;
                 overflow-x: auto;
-                padding: 16px;
-            }
-            .sidebar-section-title,
-            .sidebar-bottom {
-                display: none;
             }
             .sidebar-menu {
                 flex-direction: row;
                 flex-wrap: nowrap;
             }
-            .sidebar-link {
-                white-space: nowrap;
+            .sidebar-section-title {
+                display: none;
             }
         }
     </style>
@@ -574,53 +529,52 @@
     $initial = strtoupper(mb_substr($displayName, 0, 1));
 @endphp
 
-<!-- TOPBAR -->
-<div class="topbar">
-    <div class="topbar-left">
-        <div class="topbar-logo">
-            <i class="bi bi-hospital"></i>
-        </div>
-        <div class="topbar-title">
-            <span>Klinik Hewan</span>
-            <span>Panel Administrator</span>
+<!-- TOP NAVBAR -->
+<div class="navbar">
+    <div class="nav-left">
+        <i class="bi bi-hospital nav-logo"></i>
+        <div>
+            <div class="brand-text-title">Klinik Hewan</div>
+            <div class="brand-text-sub">Panel Administrator</div>
         </div>
     </div>
 
-    <div class="topbar-search">
-        <input type="text" id="searchInput" placeholder="Cari menu atau data..." onkeyup="searchTable()">
+    <div class="nav-center">
+        <div class="nav-search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="Cari menu atau data user...">
+        </div>
     </div>
 
-    <div class="topbar-right">
-        <span class="notif"><i class="bi bi-bell-fill"></i></span>
-        <div class="topbar-profile">
-            <div class="topbar-avatar">
-                {{ $initial }}
+    <div class="nav-right">
+        <div class="user-info">
+            <div class="user-avatar">{{ $initial }}</div>
+            <div>
+                <div class="user-name">{{ $displayName }}</div>
+                <div class="user-role">{{ $displayRole }}</div>
             </div>
-            <div class="topbar-user">
-                <span>{{ $displayName }}</span>
-                <span>{{ $displayRole }}</span>
-            </div>
-            <a href="{{ route('logout') }}" class="topbar-logout">Logout</a>
         </div>
+        <a href="{{ route('logout') }}" class="btn-logout">
+            <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
     </div>
 </div>
 
-<!-- MAIN LAYOUT -->
-<div class="main-wrapper">
+<div class="layout">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-header-icon">
-                <i class="bi bi-grid-1x2-fill"></i>
-            </div>
-            <a href="{{ route('admin.datamaster') }}" style="text-decoration: none; color: inherit;">
+        <a href="{{ route('admin.datamaster') }}" style="text-decoration: none; color: inherit;">
+            <div class="sidebar-header">
+                <div class="sidebar-header-icon">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                </div>
                 <div>
                     <div class="sidebar-header-title">Data Master</div>
                     <div class="sidebar-header-sub">Menu administrasi sistem</div>
                 </div>
-            </a>
-        </div>
+            </div>
+        </a>
 
         <hr class="sidebar-divider">
 
@@ -646,7 +600,7 @@
                 <i class="bi bi-headset"></i> <span>Data Resepsionis</span>
             </a>
             <a href="{{ route('admin.role.manajemen') }}" class="sidebar-link">
-                <i class="bi bi-shield-lock"></i> <span>Manajemen Role</span>
+                <i class="bi bi-shield-lock"></i> <span>Data Role</span>
             </a>
         </div>
 
@@ -680,152 +634,110 @@
         </div>
     </aside>
 
-    <!-- CONTENT -->
-    <main class="content">
+    <!-- MAIN AREA -->
+    <div class="main-area">
+
+        <!-- HEADER TENGAH -->
         <div class="page-header">
-            <h2>Data User</h2>
+            <i class="bi bi-people-fill page-header-icon"></i>
+            <h1>Data User</h1>
             <p>Daftar user yang terdaftar dalam sistem.</p>
         </div>
 
-        <a href="javascript:void(0)" onclick="openTambahModal()" class="btn-add">+ Tambah User</a>
-        <a href="{{ route('admin.datamaster') }}" class="btn-back">← Kembali</a>
+        <!-- KONTEN UTAMA -->
+        <div class="container">
 
-        <table id="userTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nama</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
+            <button onclick="openAddModal()" class="btn-add">+ Tambah User</button>
+            <a href="{{ route('admin.datamaster') }}" class="btn-back">← Kembali</a>
 
-            <tbody>
-                @foreach($users as $u)
-                <tr>
-                    <td>{{ $u->iduser }}</td>
-                    <td>{{ $u->nama }}</td>
-                    <td>{{ $u->email }}</td>
-                    <td>{{ $u->role ?? '-' }}</td>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
 
-                    <td>
-                        <div class="action-icons">
-                            <!-- EDIT -->
-                            <a href="javascript:void(0)"
-                               onclick="openEditModal('{{ $u->iduser }}','{{ $u->nama }}','{{ $u->email }}','{{ $u->role }}')"
-                               class="icon-btn">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
+                <tbody>
+                    @foreach($users as $u)
+                    <tr>
+                        <td>{{ $u->iduser }}</td>
+                        <td>{{ $u->nama }}</td>
+                        <td>{{ $u->email }}</td>
+                        <td>{{ $u->role ?? '-' }}</td>
 
-                            <!-- RESET PASSWORD -->
-                            <a href="{{ url('admin/user/reset/'.$u->iduser) }}"
-                               onclick="return confirm('Reset password user ini ke 123456?')"
-                               class="icon-btn">
-                                <i class="bi bi-key-fill"></i>
-                            </a>
+                        <td>
+                            <div class="action-icons">
+                                <!-- EDIT -->
+                                <a href="javascript:void(0)"
+                                   onclick="openEditModal('{{ $u->iduser }}','{{ $u->nama }}','{{ $u->email }}','{{ $u->role }}')"
+                                   class="icon-btn"
+                                   title="Edit User">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
 
-                            <!-- HAPUS -->
-                            <a href="{{ url('admin/user/delete/'.$u->iduser) }}"
-                                onclick="return confirm('Hapus user ini?')"
-                                class="icon-btn">
-                                <i class="bi bi-trash-fill" style="color:red;"></i>
-                            </a>
+                                <!-- RESET PASSWORD -->
+                                <a href="javascript:void(0)"
+                                   onclick="resetPassword('{{ $u->iduser }}')"
+                                   class="icon-btn"
+                                   title="Reset Password">
+                                    <i class="bi bi-key-fill"></i>
+                                </a>
 
-                        </div>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+                                <!-- DELETE -->
+                                <a href="javascript:void(0)"
+                                onclick="deleteUser('{{ $u->iduser }}')"
+                                class="icon-btn"
+                                title="Hapus User">
+                                    <i class="bi bi-trash"></i>
+                                </a>
 
-    </main>
-</div>
-
-<!-- ==================== MODAL TAMBAH ==================== -->
-<div id="modalTambah" style="display:none;">
-    <div class="modal-box">
-        <h2>Tambah User</h2>
-
-        <form id="formTambahUser" method="POST">
-            @csrf
-
-            <div class="form-group">
-                <label>Nama <span class="required">*</span></label>
-                <input type="text" name="nama" id="tambah_nama" required>
-            </div>
-
-            <div class="form-group">
-                <label>Email <span class="required">*</span></label>
-                <input type="email" name="email" id="tambah_email" required>
-            </div>
-
-            <!-- PASSWORD -->
-            <div class="form-group">
-                <label>Password <span class="required">*</span></label>
-                <input type="password" name="password" id="tambah_password" required minlength="3">
-            </div>
-
-            <!-- KONFIRMASI PASSWORD -->
-            <div class="form-group">
-                <label>Konfirmasi Password <span class="required">*</span></label>
-                <input type="password" name="password_confirmation" id="password_confirmation">
-            </div>
-
-            <!-- ROLE -->
-            <div class="form-group">
-                <label>Role <span class="required">*</span></label>
-                <select name="role" id="tambah_role" required>
-                    <option value="">Pilih Role</option>
-                    @foreach($roles as $r)
-                        <option value="{{ $r->nama_role }}">{{ $r->nama_role }}</option>
+                            </div>
+                        </td>
+                    </tr>
                     @endforeach
-                </select>
-            </div>
+                </tbody>
+            </table>
 
-            <div class="modal-buttons">
-                <button type="button" class="modal-btn-cancel" onclick="closeTambahModal()">Kembali</button>
-                <button type="submit" class="modal-btn-submit">Simpan</button>
-            </div>
-        </form>
-    </div>
-</div>
+        </div><!-- /container -->
+    </div><!-- /main-area -->
 
-<!-- ==================== MODAL EDIT ==================== -->
-<div id="modalEdit">
+</div><!-- /layout -->
+
+<!-- ==================== MODAL ADD USER ==================== -->
+<div id="modalAdd" class="modal">
     <div class="modal-box">
-        <h2>Edit Data User</h2>
+        <h2>Tambah User Baru</h2>
 
-        <form id="formEditUser">
+        <form method="POST" action="{{ route('admin.user.store') }}" id="formAddUser">
             @csrf
-            <input type="hidden" name="edit_id" id="edit_id">
 
-            <div class="form-group">
-                <label>Nama <span class="required">*</span></label>
-                <input type="text" name="nama" id="edit_nama" required>
-            </div>
+            <label>Nama:</label>
+            <input type="text" name="nama" id="add_nama" required placeholder="Masukkan nama lengkap">
 
-            <div class="form-group">
-                <label>Email <span class="required">*</span></label>
-                <input type="email" name="email" id="edit_email" required>
-            </div>
+            <label>Email:</label>
+            <input type="email" name="email" id="add_email" required placeholder="email@contoh.com">
 
-            <div class="form-group">
-                <label>Role <span class="required">*</span></label>
-                <select name="role" id="edit_role" required>
-                    <option value="">Pilih Role</option>
-                    <option value="admin">Admin</option>
-                    <option value="dokter">Dokter</option>
-                    <option value="perawat">Perawat</option>
-                    <option value="resepsionis">Resepsionis</option>
-                </select>
-            </div>
+            <label>Password:</label>
+            <input type="password" name="password" id="add_password" required placeholder="Minimal 3 karakter">
+
+            <label>Role:</label>
+            <select name="role" id="add_role" required>
+                <option value="">Pilih Role</option>
+                <option value="admin">Admin</option>
+                <option value="dokter">Dokter</option>
+                <option value="perawat">Perawat</option>
+                <option value="resepsionis">Resepsionis</option>
+            </select>
 
             <div class="modal-buttons">
-                <button type="button" class="modal-btn-cancel" onclick="closeEditModal()">
-                    Kembali
+                <button type="button" onclick="closeAddModal()" class="btn-cancel">
+                    Batal
                 </button>
-                <button type="submit" class="modal-btn-submit">
+                <button type="submit" class="btn-submit">
                     Simpan
                 </button>
             </div>
@@ -833,110 +745,163 @@
     </div>
 </div>
 
+<!-- ==================== MODAL EDIT USER ==================== -->
+<div id="modalEdit" class="modal">
+    <div class="modal-box">
+        <h2>Edit Data User</h2>
+
+        <form method="POST" action="{{ route('admin.user.update') }}">
+            @csrf
+            <input type="hidden" name="edit_id" id="edit_id">
+
+            <label>Nama:</label>
+            <input type="text" name="nama" id="edit_nama" required>
+
+            <label>Email:</label>
+            <input type="email" name="email" id="edit_email" required>
+
+            <label>Role:</label>
+            <select name="role" id="edit_role" required>
+                <option value="">Pilih Role</option>
+                <option value="admin">Admin</option>
+                <option value="dokter">Dokter</option>
+                <option value="perawat">Perawat</option>
+                <option value="resepsionis">Resepsionis</option>
+            </select>
+
+            <div class="modal-buttons">
+                <button type="button" onclick="closeEditModal()" class="btn-cancel">
+                    Batal
+                </button>
+                <button type="submit" class="btn-submit">
+                    Simpan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==================== FORM TERSEMBUNYI UNTUK DELETE & RESET ==================== -->
+<form id="deleteForm" method="POST" style="display:none;">
+    @csrf
+    @method('DELETE')
+</form>
+
+<form id="resetForm" method="GET" style="display:none;">
+</form>
+
 <script>
-// FUNGSI SEARCH TABLE
-function searchTable() {
-    var input = document.getElementById("searchInput");
-    var filter = input.value.toUpperCase();
-    var table = document.getElementById("userTable");
-    var tr = table.getElementsByTagName("tr");
-
-    for (var i = 1; i < tr.length; i++) {
-        var tdNama = tr[i].getElementsByTagName("td")[1];
-        var tdEmail = tr[i].getElementsByTagName("td")[2];
-        var tdRole = tr[i].getElementsByTagName("td")[3];
-        
-        if (tdNama || tdEmail || tdRole) {
-            var txtNama = tdNama.textContent || tdNama.innerText;
-            var txtEmail = tdEmail.textContent || tdEmail.innerText;
-            var txtRole = tdRole.textContent || tdRole.innerText;
-            
-            if (txtNama.toUpperCase().indexOf(filter) > -1 || 
-                txtEmail.toUpperCase().indexOf(filter) > -1 ||
-                txtRole.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
-        }
-    }
+// TAMBAH USER
+function openAddModal() {
+    // Reset semua field ke kosong
+    document.getElementById('add_nama').value = '';
+    document.getElementById('add_email').value = '';
+    document.getElementById('add_password').value = '';
+    document.getElementById('add_role').value = '';
+    
+    // Tampilkan modal
+    document.getElementById('modalAdd').classList.add('show');
 }
 
-// FUNGSI BUKA MODAL TAMBAH
-function openTambahModal() {
-    document.getElementById('modalTambah').style.display = 'flex';
+function closeAddModal() {
+    document.getElementById('modalAdd').classList.remove('show');
+    // Reset form saat ditutup
+    document.getElementById('formAddUser').reset();
 }
 
-// FUNGSI TUTUP MODAL TAMBAH
-function closeTambahModal() {
-    document.getElementById('modalTambah').style.display = 'none';
-    document.getElementById('formTambahUser').reset();
-}
-
-// FUNGSI BUKA MODAL EDIT
+// EDIT USER
 function openEditModal(id, nama, email, role) {
     document.getElementById('edit_id').value = id;
     document.getElementById('edit_nama').value = nama;
     document.getElementById('edit_email').value = email;
     document.getElementById('edit_role').value = role;
-    document.getElementById('modalEdit').style.display = 'flex';
+    document.getElementById('modalEdit').classList.add('show');
 }
 
-// FUNGSI TUTUP MODAL EDIT
 function closeEditModal() {
-    document.getElementById('modalEdit').style.display = 'none';
-    document.getElementById('formEditUser').reset();
+    document.getElementById('modalEdit').classList.remove('show');
 }
 
+// DELETE USER
+function deleteUser(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+        const form = document.getElementById('deleteForm');
+        form.action = '/admin/user/delete/' + id;
+        form.submit();
+    }
+}
 
-// HANDLE FORM TAMBAH USER
-document.getElementById('formTambahUser').addEventListener('submit', function(e) {
+// RESET PASSWORD
+function resetPassword(id) {
+    if (confirm('Reset password user ini ke 123456?')) {
+        const form = document.getElementById('resetForm');
+        form.action = '/admin/user/reset/' + id;
+        form.submit();
+    }
+}
+
+// CLOSE MODAL WHEN CLICKING OUTSIDE
+window.onclick = function(event) {
+    const modalAdd = document.getElementById('modalAdd');
+    const modalEdit = document.getElementById('modalEdit');
+    
+    if (event.target == modalAdd) {
+        closeAddModal();
+    }
+    if (event.target == modalEdit) {
+        closeEditModal();
+    }
+}
+
+// HANDLE FORM SUBMISSION WITH AJAX FOR ADD USER
+document.querySelector('#formAddUser').addEventListener('submit', function(e) {
     e.preventDefault();
-
-    let formData = new FormData(this);
-
-    fetch('{{ route("admin.user.store") }}', {
+    
+    const formData = new FormData(this);
+    
+    fetch(this.action, {
         method: 'POST',
         body: formData,
-        headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' }
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert("User berhasil ditambahkan!");
-            closeTambahModal();
-            location.reload();
+            alert('User berhasil ditambahkan!');
+            closeAddModal();
+            window.location.reload();
         } else {
-            alert("Gagal menambahkan user: " + (data.message || 'Terjadi kesalahan'));
+            alert(data.message || 'Gagal menambahkan user');
         }
     })
-    .catch(err => {
-        console.error(err);
-        alert("Terjadi kesalahan saat menambahkan user");
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat menambahkan user');
     });
 });
 
-// HANDLE FORM EDIT USER
-document.getElementById('formEditUser').addEventListener('submit', function(e) {
+// HANDLE FORM SUBMISSION WITH AJAX FOR EDIT USER
+document.querySelector('#modalEdit form').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    var formData = new FormData(this);
+    const formData = new FormData(this);
     
-    fetch('{{ route("admin.user.update") }}', {
+    fetch(this.action, {
         method: 'POST',
         body: formData,
         headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            'X-Requested-With': 'XMLHttpRequest'
         }
     })
     .then(response => response.json())
     .then(data => {
-        if(data.success) {
+        if (data.success) {
             alert('User berhasil diupdate!');
-            closeEditModal();
-            location.reload(); // Reload halaman untuk menampilkan data terupdate
+            window.location.reload();
         } else {
-            alert('Gagal mengupdate user: ' + (data.message || 'Terjadi kesalahan'));
+            alert(data.message || 'Gagal mengupdate user');
         }
     })
     .catch(error => {
@@ -944,19 +909,6 @@ document.getElementById('formEditUser').addEventListener('submit', function(e) {
         alert('Terjadi kesalahan saat mengupdate user');
     });
 });
-
-// TUTUP MODAL SAAT KLIK DI LUAR MODAL
-window.onclick = function(event) {
-    var modalTambah = document.getElementById('modalTambah');
-    var modalEdit = document.getElementById('modalEdit');
-    
-    if (event.target == modalTambah) {
-        closeTambahModal();
-    }
-    if (event.target == modalEdit) {
-        closeEditModal();
-    }
-}
 </script>
 
 </body>
